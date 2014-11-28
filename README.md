@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.org/phsym/jArgParse.svg)](https://travis-ci.org/phsym/jArgParse)
 # jArgParse.
 *Copyright (C) 2014 Pierre-Henri Symoneaux*
 
