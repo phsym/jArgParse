@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 
 import phsym.argparse.arguments.Argument;
 import phsym.argparse.arguments.Type;
+import phsym.argparse.exceptions.ArgumentConflictException;
 import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
@@ -55,7 +56,10 @@ public class ArgParse {
 	}
 
 	public <E> void add(Argument<E> arg) {
-		map.put(arg.getName(), arg);
+		String name = arg.getName();
+		if(map.containsKey(name))
+			throw new ArgumentConflictException("Argument " + name + " is already registered");
+		map.put(name, arg);
 	}
 	
 	public void add(Type type, String name, String help) {
