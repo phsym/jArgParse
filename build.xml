@@ -39,7 +39,7 @@
 	<target depends="build" name="create_jar">
         <jar destfile="JArgParse.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="bulkgen.BulkGenerator"/>
+                <attribute name="Main-Class" value="phsym.Main"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="bin"/>
