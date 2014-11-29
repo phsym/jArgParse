@@ -34,7 +34,7 @@ import java.util.Map;
 import phsym.argparse.ArgParse;
 import phsym.argparse.arguments.Type;
 
-public class Main implements Type {
+public final class Main implements Type {
 
 	public static void main(String[] args) {
 		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
@@ -72,9 +72,7 @@ public class Main implements Type {
 		
 		parser.addHelpFlag();
 		
-		parser.onError((e) -> System.err.println(e.getMessage()))
-			.onError((e) -> parser.printHelp())
-			.onError((e) -> System.exit(1));
+		parser.addDefaultErrorHandler();
 		
 		System.out.println("Running it");
 		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;

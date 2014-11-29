@@ -49,13 +49,9 @@ public class Main implements Type {
 			.setAction(System.out::println);
 		
 		parser.addHelpFlag();
+		parser.addDefaultErrorHandler();
 		
-		parser.onError((e) -> System.err.println(e.getMessage()))
-			.onError((e) -> parser.printHelp())
-			.onError((e) -> System.exit(1));
-		
-		Map<String, Object> x = null;
-		x = parser.parse(args);
+		Map<String, Object> x = parser.parse(args);
 
 		/* ..... */
 	}

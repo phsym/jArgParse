@@ -107,6 +107,12 @@ public class ArgParse {
 		return this;
 	}
 	
+	public void addDefaultErrorHandler() {
+		onError((e) -> System.err.println(e.getMessage()))
+			.onError((e) -> printHelp())
+			.onError((e) -> System.exit(1));
+	}
+	
 	public void addHelpFlag() {
 		add(Type.BOOL)
 			.setShortName("-h")
@@ -122,23 +128,22 @@ public class ArgParse {
 	public Map<String, Object> parse(List<String> args) {
 		Map<String, Object> values = new HashMap<>();
 		try {
-		
-		Iterator<String> it = args.iterator();
-		while (it.hasNext()) {
-			Object value = null;
-			String n = it.next();
-			Argument<?> arg = findByName(n)
-					.orElseThrow(() -> new UnknownArgumentException(n));
-			if(arg.requireValue()) {
-				if (it.hasNext())
-					value = arg.call(it.next());
+			Iterator<String> it = args.iterator();
+			while (it.hasNext()) {
+				Object value = null;
+				String n = it.next();
+				Argument<?> arg = findByName(n)
+						.orElseThrow(() -> new UnknownArgumentException(n));
+				if(arg.requireValue()) {
+					if (it.hasNext())
+						value = arg.call(it.next());
+				}
+				else
+					value = arg.call();
+				values.put(arg.getShortName(), value);
 			}
-			else
-				value = arg.call();
-			values.put(arg.getShortName(), value);
-		}
-		processDefault(values);
-		checkRequired();
+			processDefault(values);
+			checkRequired();
 		} catch(MissingArgumentException | ValueRequiredException | UnknownArgumentException e) {
 			if(exceptionHandler != null)
 				exceptionHandler.accept(e);
