@@ -16,7 +16,7 @@ Checkout the project, then in a terminal, go to the project directory and invoke
 
 > ant
 
-Build result is a *jArgParse.jar* file
+Build result is a **jArgParse.jar** file <br>
 Of course Java 8 is required to build and run the library
 
 ## How To Use :
@@ -29,21 +29,21 @@ public class Main implements Type {
 		parser.add(INT, "-i")
 			.setDescription("The i option")
 			.setRequired(true)
-			.setAction(System.out::println);
+			.addAction(System.out::println);
 		
 		parser.add(STRING, "-o")
 			.setDefault("Default String")
 			.setDescription("The o option")
-			.setAction((x) -> System.out.println("The o option has been passed : " + x))
+			.addAction((x) -> System.out.println("The o option has been passed : " + x))
 			.addAction((x) -> System.out.println("And again : " + x));
 		
 		parser.add(STRING_ARRAY, "-l")
 			.setDescription("List of strings")
-			.setAction(System.out::println);
+			.addAction(System.out::println);
 		
 		parser.add(STRING_MAP, "-m")
 			.setDescription("Map value")
-			.setAction(System.out::println);
+			.addAction(System.out::println);
 		
 		parser.addHelpFlag();
 		parser.addVersionFlag();
