@@ -33,9 +33,6 @@ import java.util.Map;
 
 import phsym.argparse.ArgParse;
 import phsym.argparse.arguments.Type;
-import phsym.argparse.exceptions.MissingArgumentException;
-import phsym.argparse.exceptions.UnknownArgumentException;
-import phsym.argparse.exceptions.ValueRequiredException;
 
 public class Main implements Type {
 
@@ -68,17 +65,19 @@ public class Main implements Type {
 			.setDefault(12)
 			.addAction((i) -> System.out.println("Default : " + i));
 		
+//		parser.add(INT)
+//			.setShortName("-r")
+//			.setDescription("Required")
+//			.setRequired(true);
+		
 		parser.addHelpFlag();
 		
+		parser.onError((e) -> System.err.println(e.getMessage()))
+			.onError((e) -> parser.printHelp())
+			.onError((e) -> System.exit(1));
+		
 		System.out.println("Running it");
-		Map<String, Object> x = null;
-		try {
-			x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));
-		} catch (UnknownArgumentException | ValueRequiredException | MissingArgumentException e) {
-			System.err.println(e.getMessage());
-			parser.printHelp();
-			System.exit(1);
-		}
+		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
 		System.out.println(x);
 	}
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="create_jar" name="JArgParse">
+<project basedir="." default="create_jar" name="jArgParse">
     <property environment="env"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
-    <path id="JArgParse.classpath">
+    <path id="jArgParse.classpath">
         <pathelement location="bin"/>
     </path>
     <target name="init">
@@ -32,12 +32,12 @@
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
     <target name="Main">
         <java classname="phsym.Main" failonerror="true" fork="yes">
-            <classpath refid="JArgParse.classpath"/>
+            <classpath refid="jArgParse.classpath"/>
         </java>
     </target>
 	
 	<target depends="build" name="create_jar">
-        <jar destfile="JArgParse.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="jArgParse.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="phsym.Main"/>
                 <attribute name="Class-Path" value="."/>

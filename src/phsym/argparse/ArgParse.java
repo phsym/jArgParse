@@ -35,6 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import phsym.argparse.arguments.Argument;
 import phsym.argparse.arguments.Type;
@@ -49,6 +50,7 @@ public class ArgParse {
 	private String prog;
 	private String version;
 	private String description;
+	private Consumer<Exception> exceptionHandler;
 
 	public ArgParse(String prog, String version, String description) {
 		this.prog = prog;
@@ -79,23 +81,30 @@ public class ArgParse {
 			throw new MissingArgumentException(missing.get().getShortName());
 	}
 
-	public <E> void add(Argument<E> arg) {
+	public <E, T extends Argument<E>> T add(T arg) {
 		if(arg == null)
 			throw new NullPointerException("arg must be non null");
 		String name = arg.getShortName();
 		findByName(arg.getShortName())
 			.ifPresent((x) -> {throw new ArgumentConflictException("Argument " + name + " is already registered");}); 
 		arguments.add(arg);
+		return arg;
 	}
 	
 	public <E, T extends Argument<E>> T add(Class<T> type) {
 		try {
-			T arg = type.newInstance();
-			add(arg);
-			return arg;
+			return add(type.newInstance());
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("FATAL unexpected error", e);
 		}
+	}
+	
+	public ArgParse onError(Consumer<Exception> handler) {
+		if(exceptionHandler == null)
+			exceptionHandler = handler;
+		else
+			exceptionHandler = exceptionHandler.andThen(handler);
+		return this;
 	}
 	
 	public void addHelpFlag() {
@@ -106,12 +115,14 @@ public class ArgParse {
 			.addAction((b) -> System.exit(1));
 	}
 
-	public Map<String, Object> parse(String[] args) throws UnknownArgumentException, ValueRequiredException, MissingArgumentException {
+	public Map<String, Object> parse(String[] args) {
 		return parse(Arrays.asList(args));
 	}
 	
-	public Map<String, Object> parse(List<String> args) throws UnknownArgumentException, ValueRequiredException, MissingArgumentException {
+	public Map<String, Object> parse(List<String> args) {
 		Map<String, Object> values = new HashMap<>();
+		try {
+		
 		Iterator<String> it = args.iterator();
 		while (it.hasNext()) {
 			Object value = null;
@@ -128,12 +139,21 @@ public class ArgParse {
 		}
 		processDefault(values);
 		checkRequired();
+		} catch(MissingArgumentException | ValueRequiredException | UnknownArgumentException e) {
+			if(exceptionHandler != null)
+				exceptionHandler.accept(e);
+			else {
+				e.printStackTrace();
+			}
+		}
 		return values;
 	}
 
 	public void printHelp() {
 		System.out.println("Usage for : " + prog + " version " + version);
 		System.out.println(description);
-		arguments.stream().map(Argument::helpStr).forEach(System.out::println);
+		arguments.stream()
+			.map(Argument::helpStr)
+			.forEach(System.out::println);
 	}
 }

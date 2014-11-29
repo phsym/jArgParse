@@ -97,7 +97,7 @@ public abstract class Argument<E> {
 		if(this.action == null)
 			this.action = action;
 		else
-			this.action.andThen(action);
+			this.action = this.action.andThen(action);
 		return this;
 	}
 

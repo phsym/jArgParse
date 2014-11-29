@@ -16,6 +16,8 @@ Checkout the project, then in a terminal, go to the project directory and invoke
 
 > ant
 
+Build result is a *jArgParse.jar* file
+Of course Java 8 is required to build and run the library
 
 ## How To Use :
 
@@ -48,14 +50,13 @@ public class Main implements Type {
 		
 		parser.addHelpFlag();
 		
+		parser.onError((e) -> System.err.println(e.getMessage()))
+			.onError((e) -> parser.printHelp())
+			.onError((e) -> System.exit(1));
+		
 		Map<String, Object> x = null;
-		try {
-			x = parser.parse(args);
-		} catch (UnknownArgumentException | ValueRequiredException | MissingArgumentException e) {
-			System.err.println(e.getMessage());
-			parser.printHelp();
-			System.exit(1);
-		}
+		x = parser.parse(args);
+
 		/* ..... */
 	}
 }
