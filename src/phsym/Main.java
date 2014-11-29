@@ -62,15 +62,12 @@ public class Main implements Type {
 			.setAction(System.out::println);
 		
 		parser.add(BOOL)
-			.setShortName("-h")
-			.setDescription("Print this help")
-			.setAction((h) -> {parser.printHelp();System.exit(1);});
-		
-		parser.add(BOOL)
 			.setShortName("-r")
 			.setDescription("Required flag")
 			.setRequired(true)
 			.setAction((h) -> {parser.printHelp();System.exit(1);});
+		
+		parser.addHelpFlag();
 		
 		System.out.println("Running it");
 		Map<String, Object> x = null;

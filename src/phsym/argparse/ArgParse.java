@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import phsym.argparse.arguments.Argument;
+import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgumentConflictException;
 import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
@@ -87,6 +88,13 @@ public class ArgParse {
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("FATAL unexpected error", e);
 		}
+	}
+	
+	public void addHelpFlag() {
+		add(Type.BOOL)
+			.setShortName("-h")
+			.setDescription("Print this help")
+			.setAction((b) -> {printHelp(); System.exit(1);});
 	}
 
 	public Map<String, Object> parse(String[] args) throws UnknownArgumentException, ValueRequiredException, MissingArgumentException {

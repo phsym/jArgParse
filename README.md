@@ -16,7 +16,7 @@ It's currently a work in progress
 ```java
 public class Main implements Type {
 
-	public static void main(String[] args) throws UnknownArgumentException, ValueRequiredException {
+	public static void main(String[] args) {
 		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
 		parser.add(INT)
 			.setShortName("-i")
@@ -39,12 +39,16 @@ public class Main implements Type {
 			.setDescription("Map value")
 			.setAction(System.out::println);
 		
-		parser.add(BOOL)
-			.setShortName("-h")
-			.setDescription("Print this help")
-			.setAction((h) -> {parser.printHelp();System.exit(1);});
+		parser.addHelpFlag();
 		
-		Map<String, Object> x = parser.parse(args);
+		Map<String, Object> x = null;
+		try {
+			x = parser.parse(args);
+		} catch (UnknownArgumentException | ValueRequiredException | MissingArgumentException e) {
+			System.err.println(e.getMessage());
+			parser.printHelp();
+			System.exit(1);
+		}
 		/* ..... */
 	}
 }
