@@ -62,6 +62,12 @@ public class Main implements Type {
 			.setDescription("Map value")
 			.addAction(System.out::println);
 		
+		parser.add(INT)
+			.setShortName("--default")
+			.setDescription("Test with default")
+			.setDefault(12)
+			.addAction((i) -> System.out.println("Default : " + i));
+		
 		parser.addHelpFlag();
 		
 		System.out.println("Running it");

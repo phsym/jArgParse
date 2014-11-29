@@ -32,6 +32,7 @@ public class Main implements Type {
 		
 		parser.add(STRING)
 			.setShortName("-o")
+			.setDefault("Default String")
 			.setDescription("The o option")
 			.setAction((x) -> System.out.println("The o option has been passed : " + x));
 		

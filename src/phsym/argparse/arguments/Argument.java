@@ -39,6 +39,7 @@ public abstract class Argument<E> {
 	private Consumer<E> action;
 	private boolean processed = false;
 	private boolean required = false;
+	private E defaultValue;
 	
 	public Argument() {
 		
@@ -46,6 +47,10 @@ public abstract class Argument<E> {
 	
 	public boolean hasBeenProcessed() {
 		return processed;
+	}
+	
+	public boolean hasNotBeenProcessed() {
+		return !processed;
 	}
 	
 	public String getShortName() {
@@ -64,6 +69,19 @@ public abstract class Argument<E> {
 	public Argument<E> setDescription(String description) {
 		this.description = description;
 		return this;
+	}
+	
+	public E getDefault() {
+		return defaultValue;
+	}
+	
+	public Argument<E> setDefault(E defaultValue) {
+		this.defaultValue = defaultValue;
+		return this;
+	}
+	
+	public boolean hasDefault() {
+		return defaultValue != null;
 	}
 	
 	public Argument<E> setRequired(boolean required) {
@@ -94,18 +112,25 @@ public abstract class Argument<E> {
 		return help.toString();
 	}
 
+	private E callDirect(E value) {
+		if(action != null)
+			action.accept(value);
+		processed = true;
+		return value;
+	}
+	
 	public E call() throws ValueRequiredException {
-		return call(null);
+		return callDirect((E)null);
 	}
 	
 	public E call(String value) throws ValueRequiredException {
 		if(value == null && requireValue())
 			throw new ValueRequiredException(shortName);
-		E parsedVal = parse(value);
-		if(action != null)
-			action.accept(parsedVal);
-		processed = true;
-		return parsedVal;
+		return callDirect(parse(value));
+	}
+	
+	public E callDefault() {
+		return callDirect(defaultValue);
 	}
 	
 	public abstract E parse(String value);

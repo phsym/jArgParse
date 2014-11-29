@@ -63,9 +63,17 @@ public class ArgParse {
 				.findFirst();
 	}
 	
+	private void processDefault(Map<String, Object> values) {
+		arguments.stream()
+			.filter(Argument::hasNotBeenProcessed)
+			.filter(Argument::hasDefault)
+			.forEach((a) -> values.put(a.getShortName(), a.callDefault()));
+	}
+	
 	private void checkRequired() throws MissingArgumentException {
 		Optional<Argument<?>> missing = arguments.stream()
-			.filter((a) -> !a.hasBeenProcessed() && a.isRequired())
+			.filter(Argument::hasNotBeenProcessed)
+			.filter(Argument::isRequired)
 			.findFirst();
 		if(missing.isPresent())
 			throw new MissingArgumentException(missing.get().getShortName());
@@ -118,6 +126,7 @@ public class ArgParse {
 				value = arg.call();
 			values.put(arg.getShortName(), value);
 		}
+		processDefault(values);
 		checkRequired();
 		return values;
 	}
