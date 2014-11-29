@@ -38,6 +38,7 @@ import java.util.Optional;
 
 import phsym.argparse.arguments.Argument;
 import phsym.argparse.exceptions.ArgumentConflictException;
+import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
@@ -60,6 +61,14 @@ public class ArgParse {
 				.filter((a) -> a.getShortName().equals(name))
 				.findFirst();
 	}
+	
+	private void checkRequired() throws MissingArgumentException {
+		Optional<Argument<?>> missing = arguments.stream()
+			.filter((a) -> !a.hasBeenProcessed() && a.isRequired())
+			.findFirst();
+		if(missing.isPresent())
+			throw new MissingArgumentException(missing.get().getShortName());
+	}
 
 	public <E> void add(Argument<E> arg) {
 		if(arg == null)
@@ -80,11 +89,11 @@ public class ArgParse {
 		}
 	}
 
-	public Map<String, Object> parse(String[] args) throws UnknownArgumentException, ValueRequiredException {
+	public Map<String, Object> parse(String[] args) throws UnknownArgumentException, ValueRequiredException, MissingArgumentException {
 		return parse(Arrays.asList(args));
 	}
 	
-	public Map<String, Object> parse(List<String> args) throws UnknownArgumentException, ValueRequiredException {
+	public Map<String, Object> parse(List<String> args) throws UnknownArgumentException, ValueRequiredException, MissingArgumentException {
 		Map<String, Object> values = new HashMap<>();
 		Iterator<String> it = args.iterator();
 		while (it.hasNext()) {
@@ -100,6 +109,7 @@ public class ArgParse {
 				value = arg.call();
 			values.put(arg.getShortName(), value);
 		}
+		checkRequired();
 		return values;
 	}
 

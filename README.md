@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/phsym/jArgParse.svg)](https://travis-ci.org/phsym/jArgParse)
 
-# jArgParse.
+# jArgParse
 
 *Copyright &copy; 2014 Pierre-Henri Symoneaux*
 
@@ -21,6 +21,7 @@ public class Main implements Type {
 		parser.add(INT)
 			.setShortName("-i")
 			.setDescription("The i option")
+			.setRequired(true)
 			.setAction(System.out::println);
 		
 		parser.add(STRING)

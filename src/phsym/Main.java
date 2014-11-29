@@ -33,12 +33,13 @@ import java.util.Map;
 
 import phsym.argparse.ArgParse;
 import phsym.argparse.arguments.Type;
+import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
 public class Main implements Type {
 
-	public static void main(String[] args) throws UnknownArgumentException, ValueRequiredException {
+	public static void main(String[] args) {
 		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
 		parser.add(INT)
 			.setShortName("-i")
@@ -65,9 +66,21 @@ public class Main implements Type {
 			.setDescription("Print this help")
 			.setAction((h) -> {parser.printHelp();System.exit(1);});
 		
+		parser.add(BOOL)
+			.setShortName("-r")
+			.setDescription("Required flag")
+			.setRequired(true)
+			.setAction((h) -> {parser.printHelp();System.exit(1);});
+		
 		System.out.println("Running it");
-		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));
+		Map<String, Object> x = null;
+		try {
+			x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));
+		} catch (UnknownArgumentException | ValueRequiredException | MissingArgumentException e) {
+			System.err.println(e.getMessage());
+			parser.printHelp();
+			System.exit(1);
+		}
 		System.out.println(x);
-		parser.printHelp();
 	}
 }

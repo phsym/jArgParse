@@ -37,9 +37,15 @@ public abstract class Argument<E> {
 	private String shortName;
 	private String description;
 	private Consumer<E> action;
+	private boolean processed = false;
+	private boolean required = false;
 	
 	public Argument() {
 		
+	}
+	
+	public boolean hasBeenProcessed() {
+		return processed;
 	}
 	
 	public String getShortName() {
@@ -58,6 +64,15 @@ public abstract class Argument<E> {
 	public Argument<E> setDescription(String description) {
 		this.description = description;
 		return this;
+	}
+	
+	public Argument<E> setRequired(boolean required) {
+		this.required = required;
+		return this;
+	}
+	
+	public boolean isRequired() {
+		return required;
 	}
 	
 	public Argument<E> setAction(Consumer<E> action) {
@@ -86,6 +101,7 @@ public abstract class Argument<E> {
 		E parsedVal = parse(value);
 		if(action != null)
 			action.accept(parsedVal);
+		processed = true;
 		return parsedVal;
 	}
 	
