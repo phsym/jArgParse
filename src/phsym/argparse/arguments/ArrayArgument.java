@@ -34,13 +34,20 @@ import java.util.List;
 
 public abstract class ArrayArgument<E> extends Argument<List<E>> {
 	
+	private char separator = ',';
+	
 	public ArrayArgument() {
 		super();
+	}
+	
+	public ArrayArgument<E> setSeparator(char separator) {
+		this.separator = separator;
+		return this;
 	}
 
 	@Override
 	public final List<E> parse(String value) {
-		return Arrays.asList(Arrays.stream(value.split("\\s*,\\s*"))
+		return Arrays.asList(Arrays.stream(value.split("\\s*" + separator + "\\s*"))
 			.map(this::parseElement)
 			.toArray(this::createArray));
 	}

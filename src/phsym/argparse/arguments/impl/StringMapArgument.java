@@ -44,6 +44,7 @@ public class StringMapArgument extends MapArgument<String> {
 
 	@Override
 	public String typeDesc() {
+		//TODO: Get separators from superclass
 		return "key:value[, ...]";
 	}
 

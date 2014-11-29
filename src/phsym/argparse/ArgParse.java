@@ -61,8 +61,8 @@ public class ArgParse {
 	
 	private Optional<Argument<?>> findByName(String name) {
 		return arguments.stream()
-				.filter((a) -> a.getName().equals(name))
-				.findFirst();
+			.filter((a) -> name.equals(a.getName()))
+			.findFirst();
 	}
 	
 	private void processDefault(Map<String, Object> values) {
@@ -97,7 +97,7 @@ public class ArgParse {
 			arg.setName(name);
 			return add(arg);
 		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException("FATAL unexpected error", e);
+			throw new RuntimeException("FATAL : unexpected error", e);
 		}
 	}
 	

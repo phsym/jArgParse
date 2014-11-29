@@ -35,13 +35,22 @@ import java.util.Map;
 
 public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	
+	private char entrySeparator = ',';
+	private char keySeparator = ':';
+	
 	public MapArgument() {
+	}
+	
+	public MapArgument<V> setSeparators(char entrySeparator, char keySeparator) {
+		this.entrySeparator = entrySeparator;
+		this.keySeparator = keySeparator;
+		return this;
 	}
 
 	@Override
 	public Map<String, V> parse(String value) {
-		return Arrays.stream(value.split("\\s*,\\s*"))
-			.map((s) -> s.split("\\s*:\\s*"))
+		return Arrays.stream(value.split("\\s*" + entrySeparator + "\\s*"))
+			.map((s) -> s.split("\\s*" + keySeparator + "\\s*"))
 			.reduce(new HashMap<>(), (r,e) -> {r.put(e[0], parseValue(e[1])); return r;}, (a, b) -> {a.putAll(b); return a;});
 	}
 

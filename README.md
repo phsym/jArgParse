@@ -38,10 +38,12 @@ public class Main implements Type {
 			.addAction((x) -> System.out.println("And again : " + x));
 		
 		parser.add(STRING_ARRAY, "-l")
+			.setSeparators(',', ':')
 			.setDescription("List of strings")
 			.addAction(System.out::println);
 		
 		parser.add(STRING_MAP, "-m")
+			.setSeparators(',', ':')
 			.setDescription("Map value")
 			.addAction(System.out::println);
 		

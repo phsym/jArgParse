@@ -49,10 +49,12 @@ public final class Main implements Type {
 			.addAction((x) -> System.out.println("And again : " + x));
 		
 		parser.add(STRING_ARRAY, "-l")
+			.setSeparator(',')
 			.setDescription("List of strings")
 			.addAction(System.out::println);
 		
 		parser.add(STRING_MAP, "-m")
+			.setSeparators(',', ':')
 			.setDescription("Map value")
 			.addAction(System.out::println);
 		
@@ -69,7 +71,7 @@ public final class Main implements Type {
 		parser.addVersionFlag();
 		parser.addDefaultErrorHandler();
 		
-		Map<String, Object> x = parser.parse(Arrays.asList("-h", "-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
+		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
 		System.out.println(x);
 		parser.printHelp();
 	}
