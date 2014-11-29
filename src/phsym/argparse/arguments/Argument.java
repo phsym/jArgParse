@@ -75,8 +75,11 @@ public abstract class Argument<E> {
 		return required;
 	}
 	
-	public Argument<E> setAction(Consumer<E> action) {
-		this.action = action;
+	public Argument<E> addAction(Consumer<E> action) {
+		if(this.action == null)
+			this.action = action;
+		else
+			this.action.andThen(action);
 		return this;
 	}
 

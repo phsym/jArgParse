@@ -94,7 +94,8 @@ public class ArgParse {
 		add(Type.BOOL)
 			.setShortName("-h")
 			.setDescription("Print this help")
-			.setAction((b) -> {printHelp(); System.exit(1);});
+			.addAction((b) -> printHelp())
+			.addAction((b) -> System.exit(1));
 	}
 
 	public Map<String, Object> parse(String[] args) throws UnknownArgumentException, ValueRequiredException, MissingArgumentException {

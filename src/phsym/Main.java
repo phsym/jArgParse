@@ -43,29 +43,24 @@ public class Main implements Type {
 		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
 		parser.add(INT)
 			.setShortName("-i")
+			.setRequired(true)
 			.setDescription("The i option")
-			.setAction(System.out::println);
+			.addAction(System.out::println);
 		
 		parser.add(STRING)
 			.setShortName("-o")
 			.setDescription("The o option")
-			.setAction((x) -> System.out.println("The o option has been passed : " + x));
+			.addAction((x) -> System.out.println("The o option has been passed : " + x));
 		
 		parser.add(STRING_ARRAY)
 			.setShortName("-l")
 			.setDescription("List of strings")
-			.setAction(System.out::println);
+			.addAction(System.out::println);
 		
 		parser.add(STRING_MAP)
 			.setShortName("-m")
 			.setDescription("Map value")
-			.setAction(System.out::println);
-		
-		parser.add(BOOL)
-			.setShortName("-r")
-			.setDescription("Required flag")
-			.setRequired(true)
-			.setAction((h) -> {parser.printHelp();System.exit(1);});
+			.addAction(System.out::println);
 		
 		parser.addHelpFlag();
 		

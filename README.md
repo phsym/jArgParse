@@ -5,11 +5,17 @@
 *Copyright &copy; 2014 Pierre-Henri Symoneaux*
 
 > THIS SOFTWARE IS DISTRIBUTED WITHOUT ANY WARRANTY <br>
-> See the license section for more information. <br>
+> Check LICENSE.txt file for more information. <br>
 
 
 **jArgParse** is a command line argument parser for Java 8.
 It's currently a work in progress
+
+## How to build
+Checkout the project, then in a terminal, go to the project directory and invoke the Ant builder with 
+
+> ant
+
 
 ## How To Use :
 
