@@ -28,6 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -79,6 +80,10 @@ public class ArgParse {
 		}
 	}
 
+	public Map<String, Object> parse(String[] args) throws UnknownArgumentException, ValueRequiredException {
+		return parse(Arrays.asList(args));
+	}
+	
 	public Map<String, Object> parse(List<String> args) throws UnknownArgumentException, ValueRequiredException {
 		Map<String, Object> values = new HashMap<>();
 		Iterator<String> it = args.iterator();
