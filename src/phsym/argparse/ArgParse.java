@@ -30,20 +30,19 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package phsym.argparse;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Optional;
 
 import phsym.argparse.arguments.Argument;
-import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgumentConflictException;
 import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
 public class ArgParse {
 
-	private LinkedHashMap<String, Argument<?>> map;
+	private List<Argument<?>> arguments;
 	private String prog;
 	private String version;
 	private String description;
@@ -52,42 +51,32 @@ public class ArgParse {
 		this.prog = prog;
 		this.version = version;
 		this.description = description;
-		map = new LinkedHashMap<>();
+		arguments = new LinkedList<>();
+	}
+	
+	private Optional<Argument<?>> findByName(String name) {
+		return arguments.stream()
+				.filter((a) -> a.getShortName().equals(name))
+				.findFirst();
 	}
 
 	public <E> void add(Argument<E> arg) {
-		String name = arg.getName();
-		if(map.containsKey(name))
-			throw new ArgumentConflictException("Argument " + name + " is already registered");
-		map.put(name, arg);
+		if(arg == null)
+			throw new NullPointerException("arg must be non null");
+		String name = arg.getShortName();
+		findByName(arg.getShortName())
+			.ifPresent((x) -> {throw new ArgumentConflictException("Argument " + name + " is already registered");}); 
+		arguments.add(arg);
 	}
 	
-	public void add(Type type, String name, String help) {
-		add(type.newInstance(name, help));
-	}
-	
-	public <E> void on(Type type, String name, String help, Consumer<E> action) {
-		add(type.newInstance(name, help, action));
-	}
-	
-	public void onInt(String name, String help, Consumer<Integer> action) {
-		on(Type.INT, name, help, action);
-	}
-	
-	public void onString(String name, String help, Consumer<String> action) {
-		on(Type.STRING, name, help, action);
-	}
-	
-	public void onBool(String name, String help, Consumer<Boolean> action) {
-		on(Type.BOOL, name, help, action);
-	}
-	
-	public void onStringArray(String name, String help, Consumer<List<String>> action) {
-		on(Type.STRING_ARRAY, name, help, action);
-	}
-	
-	public void onStringMap(String name, String help, Consumer<Map<String, String>> action) {
-		on(Type.STRING_MAP, name, help, action);
+	public <E, T extends Argument<E>> T add(Class<T> type) {
+		try {
+			T arg = type.newInstance();
+			add(arg);
+			return arg;
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException("FATAL unexpected error", e);
+		}
 	}
 
 	public Map<String, Object> parse(List<String> args) throws UnknownArgumentException, ValueRequiredException {
@@ -96,16 +85,15 @@ public class ArgParse {
 		while (it.hasNext()) {
 			Object value = null;
 			String n = it.next();
-			Argument<?> arg = map.get(n);
-			if (arg == null)
-				throw new UnknownArgumentException(n);
+			Argument<?> arg = findByName(n)
+					.orElseThrow(() -> new UnknownArgumentException(n));
 			if(arg.requireValue()) {
 				if (it.hasNext())
 					value = arg.call(it.next());
 			}
 			else
 				value = arg.call();
-			values.put(arg.getName(), value);
+			values.put(arg.getShortName(), value);
 		}
 		return values;
 	}
@@ -113,6 +101,6 @@ public class ArgParse {
 	public void printHelp() {
 		System.out.println("Usage for : " + prog + " version " + version);
 		System.out.println(description);
-		map.values().stream().map(Argument::helpStr).forEach(System.out::println);
+		arguments.stream().map(Argument::helpStr).forEach(System.out::println);
 	}
 }

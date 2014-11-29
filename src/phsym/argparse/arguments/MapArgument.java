@@ -32,16 +32,10 @@ package phsym.argparse.arguments;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	
-	public MapArgument(String name, String description) {
-		super(name, description);
-	}
-
-	public MapArgument(String name, String description,	Consumer<Map<String, V>> action) {
-		super(name, description, action);
+	public MapArgument() {
 	}
 
 	@Override

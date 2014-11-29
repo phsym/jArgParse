@@ -31,16 +31,11 @@ package phsym.argparse.arguments;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 public abstract class ArrayArgument<E> extends Argument<List<E>> {
 	
-	public ArrayArgument(String name, String description) {
-		super(name, description);
-	}
-
-	public ArrayArgument(String name, String description, Consumer<List<E>> action) {
-		super(name, description, action);
+	public ArrayArgument() {
+		super();
 	}
 
 	@Override

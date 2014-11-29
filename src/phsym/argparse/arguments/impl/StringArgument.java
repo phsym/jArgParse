@@ -29,18 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.arguments.impl;
 
-import java.util.function.Consumer;
-
 import phsym.argparse.arguments.Argument;
 
 public class StringArgument extends Argument<String> {
 	
-	public StringArgument(String name, String description) {
-		super(name, description);
-	}
-
-	public StringArgument(String name, String description, Consumer<String> action) {
-		super(name, description, action);
+	public StringArgument() {
+		super();
 	}
 
 	@Override

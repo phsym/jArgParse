@@ -29,18 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.arguments.impl;
 
-import java.util.function.Consumer;
-
 import phsym.argparse.arguments.Argument;
 
 public class BoolArgument extends Argument<Boolean> {
 	
-	public BoolArgument(String name, String description) {
-		super(name, description);
-	}
-
-	public BoolArgument(String name, String description, Consumer<Boolean> action) {
-		super(name, description, action);
+	public BoolArgument() {
+		super();
 	}
 
 	@Override

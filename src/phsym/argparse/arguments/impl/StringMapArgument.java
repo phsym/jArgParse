@@ -29,19 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.arguments.impl;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 import phsym.argparse.arguments.MapArgument;
 
 public class StringMapArgument extends MapArgument<String> {
 	
-	public StringMapArgument(String name, String description) {
-		super(name, description);
-	}
-
-	public StringMapArgument(String name, String description, Consumer<Map<String, String>> action) {
-		super(name, description, action);
+	public StringMapArgument() {
+		super();
 	}
 
 	@Override
