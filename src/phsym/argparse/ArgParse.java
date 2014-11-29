@@ -61,7 +61,7 @@ public class ArgParse {
 	
 	private Optional<Argument<?>> findByName(String name) {
 		return arguments.stream()
-				.filter((a) -> a.getShortName().equals(name))
+				.filter((a) -> a.getName().equals(name))
 				.findFirst();
 	}
 	
@@ -69,7 +69,7 @@ public class ArgParse {
 		arguments.stream()
 			.filter(Argument::hasNotBeenProcessed)
 			.filter(Argument::hasDefault)
-			.forEach((a) -> values.put(a.getShortName(), a.callDefault()));
+			.forEach((a) -> values.put(a.getName(), a.callDefault()));
 	}
 	
 	private void checkRequired() throws MissingArgumentException {
@@ -78,22 +78,24 @@ public class ArgParse {
 			.filter(Argument::isRequired)
 			.findFirst();
 		if(missing.isPresent())
-			throw new MissingArgumentException(missing.get().getShortName());
+			throw new MissingArgumentException(missing.get().getName());
 	}
 
 	public <E, T extends Argument<E>> T add(T arg) {
 		if(arg == null)
 			throw new NullPointerException("arg must be non null");
-		String name = arg.getShortName();
-		findByName(arg.getShortName())
-			.ifPresent((x) -> {throw new ArgumentConflictException("Argument " + name + " is already registered");}); 
+		String name = arg.getName();
+		if(findByName(arg.getName()).isPresent())
+			throw new ArgumentConflictException("Argument " + name + " is already registered");
 		arguments.add(arg);
 		return arg;
 	}
 	
-	public <E, T extends Argument<E>> T add(Class<T> type) {
+	public <E, T extends Argument<E>> T add(Class<T> type, String name) {
 		try {
-			return add(type.newInstance());
+			T arg = type.newInstance();
+			arg.setName(name);
+			return add(arg);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("FATAL unexpected error", e);
 		}
@@ -114,10 +116,16 @@ public class ArgParse {
 	}
 	
 	public void addHelpFlag() {
-		add(Type.BOOL)
-			.setShortName("-h")
+		add(Type.BOOL, "-h")
 			.setDescription("Print this help")
 			.addAction((b) -> printHelp())
+			.addAction((b) -> System.exit(1));
+	}
+	
+	public void addVersionFlag() {
+		add(Type.BOOL, "-v")
+			.setDescription("Print version")
+			.addAction((b) -> printVersion())
 			.addAction((b) -> System.exit(1));
 	}
 
@@ -140,22 +148,25 @@ public class ArgParse {
 				}
 				else
 					value = arg.call();
-				values.put(arg.getShortName(), value);
+				values.put(arg.getName(), value);
 			}
 			processDefault(values);
 			checkRequired();
 		} catch(MissingArgumentException | ValueRequiredException | UnknownArgumentException e) {
 			if(exceptionHandler != null)
 				exceptionHandler.accept(e);
-			else {
+			else
 				e.printStackTrace();
-			}
 		}
 		return values;
 	}
 
+	public void printVersion() {
+		System.out.println(prog + " " + version);
+	}
+	
 	public void printHelp() {
-		System.out.println("Usage for : " + prog + " version " + version);
+		System.out.println("Usage:");
 		System.out.println(description);
 		arguments.stream()
 			.map(Argument::helpStr)

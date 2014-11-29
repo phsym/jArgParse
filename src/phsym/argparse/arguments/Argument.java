@@ -34,7 +34,7 @@ import phsym.argparse.exceptions.ValueRequiredException;
 
 public abstract class Argument<E> {
 
-	private String shortName;
+	private String name;
 	private String description;
 	private Consumer<E> action;
 	private boolean processed = false;
@@ -53,12 +53,12 @@ public abstract class Argument<E> {
 		return !processed;
 	}
 	
-	public String getShortName() {
-		return shortName;
+	public String getName() {
+		return name;
 	}
 	
-	public Argument<E> setShortName(String shortName) {
-		this.shortName = shortName;
+	public Argument<E> setName(String shortName) {
+		this.name = shortName;
 		return this;
 	}
 	
@@ -103,7 +103,7 @@ public abstract class Argument<E> {
 
 	public String helpStr() {
 		StringBuilder help = new StringBuilder(" ");
-		help.append(shortName);
+		help.append(name);
 		if(requireValue())
 			help.append(" <").append(typeDesc()).append(">");
 		else
@@ -125,7 +125,7 @@ public abstract class Argument<E> {
 	
 	public E call(String value) throws ValueRequiredException {
 		if(value == null && requireValue())
-			throw new ValueRequiredException(shortName);
+			throw new ValueRequiredException(name);
 		return callDirect(parse(value));
 	}
 	

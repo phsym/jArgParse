@@ -26,29 +26,27 @@ public class Main implements Type {
 
 	public static void main(String[] args) {
 		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
-		parser.add(INT)
-			.setShortName("-i")
+		parser.add(INT, "-i")
 			.setDescription("The i option")
 			.setRequired(true)
 			.setAction(System.out::println);
 		
-		parser.add(STRING)
-			.setShortName("-o")
+		parser.add(STRING, "-o")
 			.setDefault("Default String")
 			.setDescription("The o option")
-			.setAction((x) -> System.out.println("The o option has been passed : " + x));
+			.setAction((x) -> System.out.println("The o option has been passed : " + x))
+			.addAction((x) -> System.out.println("And again : " + x));
 		
-		parser.add(STRING_ARRAY)
-			.setShortName("-l")
+		parser.add(STRING_ARRAY, "-l")
 			.setDescription("List of strings")
 			.setAction(System.out::println);
 		
-		parser.add(STRING_MAP)
-			.setShortName("-m")
+		parser.add(STRING_MAP, "-m")
 			.setDescription("Map value")
 			.setAction(System.out::println);
 		
 		parser.addHelpFlag();
+		parser.addVersionFlag();
 		parser.addDefaultErrorHandler();
 		
 		Map<String, Object> x = parser.parse(args);

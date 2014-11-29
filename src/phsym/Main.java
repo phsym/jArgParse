@@ -38,44 +38,39 @@ public final class Main implements Type {
 
 	public static void main(String[] args) {
 		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
-		parser.add(INT)
-			.setShortName("-i")
+		parser.add(INT, "-i")
 			.setRequired(true)
 			.setDescription("The i option")
 			.addAction(System.out::println);
 		
-		parser.add(STRING)
-			.setShortName("-o")
+		parser.add(STRING, "-o")
 			.setDescription("The o option")
-			.addAction((x) -> System.out.println("The o option has been passed : " + x));
+			.addAction((x) -> System.out.println("The o option has been passed : " + x))
+			.addAction((x) -> System.out.println("And again : " + x));
 		
-		parser.add(STRING_ARRAY)
-			.setShortName("-l")
+		parser.add(STRING_ARRAY, "-l")
 			.setDescription("List of strings")
 			.addAction(System.out::println);
 		
-		parser.add(STRING_MAP)
-			.setShortName("-m")
+		parser.add(STRING_MAP, "-m")
 			.setDescription("Map value")
 			.addAction(System.out::println);
 		
-		parser.add(INT)
-			.setShortName("--default")
+		parser.add(INT, "--default")
 			.setDescription("Test with default")
 			.setDefault(12)
 			.addAction((i) -> System.out.println("Default : " + i));
 		
-//		parser.add(INT)
-//			.setShortName("-r")
+//		parser.add(INT, "-r")
 //			.setDescription("Required")
 //			.setRequired(true);
 		
 		parser.addHelpFlag();
-		
+		parser.addVersionFlag();
 		parser.addDefaultErrorHandler();
 		
-		System.out.println("Running it");
-		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
+		Map<String, Object> x = parser.parse(Arrays.asList("-h", "-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
 		System.out.println(x);
+		parser.printHelp();
 	}
 }
