@@ -28,7 +28,7 @@ public class Main implements Type {
 		ArgParse parser = new ArgParse("Test")
 			.description("This is a simple test with java 8")
 			.version("1.0")
-			.defautHelp()
+			.defaultHelp()
 			.addDefaultErrorHandler()
 			.epilog("That's all you need");
 			

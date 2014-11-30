@@ -138,7 +138,7 @@ public class ArgParse {
 		return this;
 	}
 	
-	public ArgParse defautHelp() {
+	public ArgParse defaultHelp() {
 		add(Type.BOOL, "-h")
 			.help("Print this help")
 			.action(this::printHelp)
