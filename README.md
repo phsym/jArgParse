@@ -53,6 +53,10 @@ public class Main implements Type {
 			.help("Map value")
 			.consume(System.out::println);
 			
+		parser.add(BOOL, "-b")
+			.help("Boolean value")
+			.action(() -> System.out.println("true"));
+			
 		parser.add(STRING, "-c")
 			.help("Multiple choices option")
 			.choices("AB", "CD", "EF")

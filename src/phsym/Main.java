@@ -69,6 +69,10 @@ public final class Main implements Type {
 			.setDefault(12)
 			.consume((i) -> System.out.println("Default : " + i));
 		
+		parser.add(BOOL, "-b")
+			.help("Boolean value")
+			.action(() -> System.out.println("true"));
+		
 		parser.add(STRING, "-c")
 			.help("Multiple choices option")
 			.choices("AB", "CD", "EF")
