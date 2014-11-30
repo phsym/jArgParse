@@ -63,6 +63,11 @@ public final class Main implements Type {
 			.setDefault(12)
 			.addAction((i) -> System.out.println("Default : " + i));
 		
+		parser.add(STRING, "-c")
+		.setDescription("Multiple choices option")
+		.choices("AB", "CD", "EF")
+		.addAction((x) -> System.out.println("Choice : " + x));
+		
 //		parser.add(INT, "-r")
 //			.setDescription("Required")
 //			.setRequired(true);

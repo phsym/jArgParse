@@ -27,42 +27,15 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package phsym.argparse.arguments;
+package phsym.argparse.exceptions;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public abstract class MapArgument<V> extends Argument<Map<String, V>> {
-	
-	private char entrySeparator = ',';
-	private char keySeparator = ':';
-	
-	public MapArgument() {
-	}
-	
-	public MapArgument<V> setSeparators(char entrySeparator, char keySeparator) {
-		this.entrySeparator = entrySeparator;
-		this.keySeparator = keySeparator;
-		return this;
-	}
+public class InvalidValueException extends Exception {
 
-	@Override
-	public Map<String, V> parse(String value) {
-		return Arrays.stream(value.split("\\s*" + entrySeparator + "\\s*"))
-			.map((s) -> s.split("\\s*" + keySeparator + "\\s*"))
-			.reduce(new HashMap<>(), (r,e) -> {r.put(e[0], parseValue(e[1])); return r;}, (a, b) -> {a.putAll(b); return a;});
-	}
+	private static final long serialVersionUID = -2472708344900858077L;
 
-	@Override
-	public final boolean requireValue() {
-		return true;
+	public InvalidValueException(String argName, String value, List<String> choices) {
+		super("Invalid argument value for " + argName + " : " + value + ". Possible choices are " + choices.toString());
 	}
-	
-	@Override
-	public Argument<Map<String, V>> choices(String... choices) {
-		throw new RuntimeException(getClass().getName() + " canoot have multiple choices");
-	}
-	
-	protected abstract V parseValue(String value);
 }

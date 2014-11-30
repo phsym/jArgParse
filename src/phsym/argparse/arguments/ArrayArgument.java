@@ -57,6 +57,11 @@ public abstract class ArrayArgument<E> extends Argument<List<E>> {
 		return true;
 	}
 	
+	@Override
+	public Argument<List<E>> choices(String... choices) {
+		throw new RuntimeException(getClass().getName() + " canoot have multiple choices");
+	}
+	
 	protected abstract E[] createArray(int len);
 	protected abstract E parseElement(String element);
 }

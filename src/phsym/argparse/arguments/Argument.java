@@ -28,8 +28,12 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.arguments;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 
+import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
 public abstract class Argument<E> {
@@ -40,6 +44,7 @@ public abstract class Argument<E> {
 	private boolean processed = false;
 	private boolean required = false;
 	private E defaultValue;
+	private List<String> choices;
 	
 	public Argument() {
 		
@@ -68,6 +73,13 @@ public abstract class Argument<E> {
 	
 	public Argument<E> setDescription(String description) {
 		this.description = description;
+		return this;
+	}
+	
+	public Argument<E> choices(String ... choices) {
+		if(!this.requireValue())
+			throw new RuntimeException("Argument " + this.name + " can't have choices since no value is required");
+		this.choices = Arrays.asList(choices);
 		return this;
 	}
 	
@@ -104,9 +116,20 @@ public abstract class Argument<E> {
 	public String helpStr() {
 		StringBuilder help = new StringBuilder(" ");
 		help.append(name);
-		if(requireValue())
-			help.append(" <").append(typeDesc()).append(">");
-		else
+		if(requireValue()) {
+			if(choices == null || choices.size() == 0)
+				help.append(" <").append(typeDesc()).append(">");
+			else {
+				help.append(" <");
+				Iterator<String> it = choices.iterator();
+				while(it.hasNext()) {
+					help.append(it.next());
+					if(it.hasNext())
+						help.append(" | ");
+				}
+				help.append(">");
+			}
+		} else
 			help.append("\t");
 		help.append("\t").append(description);
 		return help.toString();
@@ -123,9 +146,11 @@ public abstract class Argument<E> {
 		return callDirect((E)null);
 	}
 	
-	public E call(String value) throws ValueRequiredException {
+	public E call(String value) throws ValueRequiredException, InvalidValueException {
 		if(value == null && requireValue())
 			throw new ValueRequiredException(name);
+		if(choices != null && choices.size() > 0 && !choices.contains(value))
+			throw new InvalidValueException(this.name, value, this.choices);
 		return callDirect(parse(value));
 	}
 	

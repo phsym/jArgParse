@@ -40,6 +40,7 @@ import java.util.function.Consumer;
 import phsym.argparse.arguments.Argument;
 import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgumentConflictException;
+import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
@@ -152,7 +153,7 @@ public class ArgParse {
 			}
 			processDefault(values);
 			checkRequired();
-		} catch(MissingArgumentException | ValueRequiredException | UnknownArgumentException e) {
+		} catch(MissingArgumentException | ValueRequiredException | UnknownArgumentException | InvalidValueException e) {
 			if(exceptionHandler != null)
 				exceptionHandler.accept(e);
 			else
