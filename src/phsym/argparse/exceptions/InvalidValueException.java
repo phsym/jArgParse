@@ -31,7 +31,7 @@ package phsym.argparse.exceptions;
 
 import java.util.List;
 
-public class InvalidValueException extends Exception {
+public class InvalidValueException extends ArgParseException {
 
 	private static final long serialVersionUID = -2472708344900858077L;
 

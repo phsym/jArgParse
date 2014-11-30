@@ -46,6 +46,11 @@ public class Main implements Type {
 			.setSeparators(',', ':')
 			.setDescription("Map value")
 			.addAction(System.out::println);
+			
+		parser.add(STRING, "-c")
+			.setDescription("Multiple choices option")
+			.choices("AB", "CD", "EF")
+			.addAction((x) -> System.out.println("Choice : " + x));
 		
 		parser.addHelpFlag();
 		parser.addVersionFlag();

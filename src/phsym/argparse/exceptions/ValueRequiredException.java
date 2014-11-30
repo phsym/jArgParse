@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.exceptions;
 
-public class ValueRequiredException extends Exception {
+public class ValueRequiredException extends ArgParseException {
 	private static final long serialVersionUID = 1L;
 	
 	public ValueRequiredException(String argument) {

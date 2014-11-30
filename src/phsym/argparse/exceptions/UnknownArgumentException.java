@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.exceptions;
 
-public class UnknownArgumentException extends Exception {
+public class UnknownArgumentException extends ArgParseException {
 	private static final long serialVersionUID = -8723495139166161294L;
 	
 	public UnknownArgumentException(String argument) {
