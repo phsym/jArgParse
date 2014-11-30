@@ -44,6 +44,8 @@ public final class Main implements Type {
 			.addDefaultErrorHandler()
 			.epilog("That's all you need");
 		
+		parser.label("Options:");
+		
 		parser.add(INT, "-i")
 			.required(true)
 			.help("The i option")
@@ -69,6 +71,8 @@ public final class Main implements Type {
 			.setDefault(12)
 			.consume((i) -> System.out.println("Default : " + i));
 		
+		parser.space();
+		
 		parser.add(BOOL, "-b")
 			.help("Boolean value")
 			.action(() -> System.out.println("true"));
@@ -78,10 +82,10 @@ public final class Main implements Type {
 			.choices("AB", "CD", "EF")
 			.consume((x) -> System.out.println("Choice : " + x));
 		
-//		parser.add(FILE, "-d")
-//			.create(false, true, true)
-//			.directory(true)
-//			.help("A Directory");
+		parser.add(FILE, "-d")
+			.create(false, true, true)
+			.directory(true)
+			.help("A Directory");
 		
 //		parser.add(INT, "-r")
 //			.setDescription("Required")

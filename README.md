@@ -32,6 +32,8 @@ public class Main implements Type {
 			.addDefaultErrorHandler()
 			.epilog("That's all you need");
 			
+		parser.label("Options:");
+			
 		parser.add(INT, "-i")
 			.help("The i option")
 			.required(true)
@@ -56,6 +58,8 @@ public class Main implements Type {
 		parser.add(BOOL, "-b")
 			.help("Boolean value")
 			.action(() -> System.out.println("true"));
+		
+		parser.space();
 			
 		parser.add(STRING, "-c")
 			.help("Multiple choices option")

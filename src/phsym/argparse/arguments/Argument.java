@@ -37,7 +37,7 @@ import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
-public abstract class Argument<E> {
+public abstract class Argument<E> implements IHelpString {
 
 	private String name;
 	private String description;
@@ -119,14 +119,16 @@ public abstract class Argument<E> {
 		return this;
 	}
 
+	@Override
 	public String helpStr() {
-		StringBuilder help = new StringBuilder(" ");
+		StringBuilder help = new StringBuilder("    ");
 		help.append(name);
+		help.append("\t");
 		if(requireValue()) {
 			if(choices == null || choices.size() == 0)
-				help.append(" <").append(typeDesc()).append(">");
+				help.append("<").append(typeDesc()).append(">");
 			else {
-				help.append(" <");
+				help.append("<");
 				Iterator<String> it = choices.iterator();
 				while(it.hasNext()) {
 					help.append(it.next());
@@ -139,7 +141,7 @@ public abstract class Argument<E> {
 			help.append("\t");
 		help.append("\t").append(description);
 		if(hasDefault())
-			help.append("\t(default: ").append(defaultValue).append(")");
+			help.append(" (default: ").append(defaultValue).append(")");
 		return help.toString();
 	}
 

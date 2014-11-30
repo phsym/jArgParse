@@ -38,6 +38,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import phsym.argparse.arguments.Argument;
+import phsym.argparse.arguments.IHelpString;
 import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.ArgumentConflictException;
@@ -47,6 +48,7 @@ import phsym.argparse.exceptions.UnknownArgumentException;
 public class ArgParse {
 
 	private List<Argument<?>> arguments;
+	private List<IHelpString> helpers;
 	private String prog;
 	private String version;
 	private String description;
@@ -56,6 +58,7 @@ public class ArgParse {
 	public ArgParse(String prog) {
 		this.prog = prog;
 		arguments = new LinkedList<>();
+		helpers = new LinkedList<>();
 	}
 	
 	private Optional<Argument<?>> findByName(String name) {
@@ -87,6 +90,7 @@ public class ArgParse {
 		if(findByName(arg.getName()).isPresent())
 			throw new ArgumentConflictException("Argument " + name + " is already registered");
 		arguments.add(arg);
+		helpers.add(arg);
 		return arg;
 	}
 	
@@ -142,6 +146,15 @@ public class ArgParse {
 		return this;
 	}
 	
+	public ArgParse label(String label) {
+		helpers.add(() -> label);
+		return this;
+	}
+	
+	public ArgParse space() {
+		return label(" ");
+	}
+	
 	public Map<String, Object> parse(String[] args) {
 		return parse(Arrays.asList(args));
 	}
@@ -185,8 +198,8 @@ public class ArgParse {
 		System.out.println("Usage:");
 		if(description != null)
 			System.out.println(description);
-		arguments.stream()
-			.map(Argument::helpStr)
+		helpers.stream()
+			.map(IHelpString::helpStr)
 			.forEach(System.out::println);
 		if(epilog != null && epilog.length() > 0)
 			System.out.println(epilog);
