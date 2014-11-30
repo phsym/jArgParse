@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 
+import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
@@ -153,7 +154,7 @@ public abstract class Argument<E> {
 		return callDirect((E)null);
 	}
 	
-	public E call(String value) throws ValueRequiredException, InvalidValueException {
+	public E call(String value) throws ArgParseException {
 		if(value == null && requireValue())
 			throw new ValueRequiredException(name);
 		if(choices != null && choices.size() > 0 && !choices.contains(value))
@@ -165,7 +166,7 @@ public abstract class Argument<E> {
 		return callDirect(defaultValue);
 	}
 	
-	public abstract E parse(String value);
+	public abstract E parse(String value) throws ArgParseException;
 	public abstract boolean requireValue();
 	public abstract String typeDesc();
 	

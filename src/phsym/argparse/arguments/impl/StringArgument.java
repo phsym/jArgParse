@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package phsym.argparse.arguments.impl;
 
 import phsym.argparse.arguments.Argument;
+import phsym.argparse.exceptions.ArgParseException;
 
 public class StringArgument extends Argument<String> {
 	
@@ -38,7 +39,7 @@ public class StringArgument extends Argument<String> {
 	}
 
 	@Override
-	public String parse(String value) {
+	public String parse(String value) throws ArgParseException {
 		return value;
 	}
 

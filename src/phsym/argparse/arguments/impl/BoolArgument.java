@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package phsym.argparse.arguments.impl;
 
 import phsym.argparse.arguments.Argument;
+import phsym.argparse.exceptions.ArgParseException;
 
 public class BoolArgument extends Argument<Boolean> {
 	
@@ -38,7 +39,7 @@ public class BoolArgument extends Argument<Boolean> {
 	}
 
 	@Override
-	public Boolean parse(String value) {
+	public Boolean parse(String value) throws ArgParseException {
 		return true;
 	}
 	

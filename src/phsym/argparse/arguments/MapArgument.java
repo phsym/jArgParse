@@ -33,6 +33,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import phsym.argparse.exceptions.ArgParseException;
+
 public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	
 	private char entrySeparator = ',';
@@ -48,7 +50,7 @@ public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	}
 
 	@Override
-	public Map<String, V> parse(String value) {
+	public Map<String, V> parse(String value) throws ArgParseException {
 		return Arrays.stream(value.split("\\s*" + entrySeparator + "\\s*"))
 			.map((s) -> s.split("\\s*" + keySeparator + "\\s*"))
 			.reduce(new HashMap<>(), (r,e) -> {r.put(e[0], parseValue(e[1])); return r;}, (a, b) -> {a.putAll(b); return a;});

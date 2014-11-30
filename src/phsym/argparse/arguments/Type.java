@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package phsym.argparse.arguments;
 
 import phsym.argparse.arguments.impl.BoolArgument;
+import phsym.argparse.arguments.impl.FileArgument;
 import phsym.argparse.arguments.impl.IntArgument;
 import phsym.argparse.arguments.impl.StringArgument;
 import phsym.argparse.arguments.impl.StringArrayArgument;
@@ -41,4 +42,5 @@ public interface Type {
 	public static final Class<StringArgument> STRING = StringArgument.class;
 	public static final Class<StringArrayArgument> STRING_ARRAY = StringArrayArgument.class;
 	public static final Class<StringMapArgument> STRING_MAP = StringMapArgument.class;
+	public static final Class<FileArgument> FILE = FileArgument.class;
 }

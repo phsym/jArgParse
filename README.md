@@ -61,6 +61,11 @@ public class Main implements Type {
 			.help("Multiple choices option")
 			.choices("AB", "CD", "EF")
 			.consume((x) -> System.out.println("Choice : " + x));
+			
+		parser.add(FILE, "-d")
+			.create(false, true, true)
+			.directory(true)
+			.help("A Directory");
 		
 		Map<String, Object> x = parser.parse(args);
 

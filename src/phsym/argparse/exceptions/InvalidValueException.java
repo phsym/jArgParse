@@ -35,7 +35,23 @@ public class InvalidValueException extends ArgParseException {
 
 	private static final long serialVersionUID = -2472708344900858077L;
 
+	public InvalidValueException(String argName, String value, Throwable e) {
+		super("Invalid argument value for " + argName + " : " + value, e);
+	}
+	
+	public InvalidValueException(String argName, String value, List<String> choices, Throwable e) {
+		super("Invalid argument value for " + argName + " : " + value + ". Possible choices are " + choices.toString(), e);
+	}
+	
+	public InvalidValueException(String argName, String value) {
+		super("Invalid argument value for " + argName + " : " + value, null);
+	}
+	
 	public InvalidValueException(String argName, String value, List<String> choices) {
-		super("Invalid argument value for " + argName + " : " + value + ". Possible choices are " + choices.toString());
+		super("Invalid argument value for " + argName + " : " + value + ". Possible choices are " + choices.toString(), null);
+	}
+	
+	public InvalidValueException(String argName, String value, String msg) {
+		super("Invalid argument value for " + argName + " : " + value + " " + msg, null);
 	}
 }

@@ -30,6 +30,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package phsym.argparse.arguments.impl;
 
 import phsym.argparse.arguments.Argument;
+import phsym.argparse.exceptions.ArgParseException;
+import phsym.argparse.exceptions.InvalidValueException;
 
 public class IntArgument extends Argument<Integer> {
 
@@ -38,8 +40,12 @@ public class IntArgument extends Argument<Integer> {
 	}
 
 	@Override
-	public Integer parse(String value) {
-		return Integer.parseInt(value);
+	public Integer parse(String value) throws ArgParseException {
+		try {
+			return Integer.parseInt(value);
+		} catch(NumberFormatException e) {
+			throw new InvalidValueException(getName(), value, e);
+		}
 	}
 
 	@Override

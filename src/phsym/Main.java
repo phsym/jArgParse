@@ -78,6 +78,11 @@ public final class Main implements Type {
 			.choices("AB", "CD", "EF")
 			.consume((x) -> System.out.println("Choice : " + x));
 		
+//		parser.add(FILE, "-d")
+//			.create(false, true, true)
+//			.directory(true)
+//			.help("A Directory");
+		
 //		parser.add(INT, "-r")
 //			.setDescription("Required")
 //			.setRequired(true);

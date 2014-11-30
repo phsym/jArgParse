@@ -38,7 +38,7 @@ public class StringMapArgument extends MapArgument<String> {
 	}
 
 	@Override
-	protected String parseValue(String value) {
+	protected String parseValue(String value){
 		return value;
 	}
 

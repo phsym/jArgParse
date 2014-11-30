@@ -32,6 +32,8 @@ package phsym.argparse.arguments;
 import java.util.Arrays;
 import java.util.List;
 
+import phsym.argparse.exceptions.ArgParseException;
+
 public abstract class ArrayArgument<E> extends Argument<List<E>> {
 	
 	private char separator = ',';
@@ -46,7 +48,7 @@ public abstract class ArrayArgument<E> extends Argument<List<E>> {
 	}
 
 	@Override
-	public final List<E> parse(String value) {
+	public final List<E> parse(String value) throws ArgParseException {
 		return Arrays.asList(Arrays.stream(value.split("\\s*" + separator + "\\s*"))
 			.map(this::parseElement)
 			.toArray(this::createArray));
