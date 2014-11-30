@@ -62,16 +62,16 @@ public abstract class Argument<E> {
 		return name;
 	}
 	
-	public Argument<E> setName(String shortName) {
+	public Argument<E> name(String shortName) {
 		this.name = shortName;
 		return this;
 	}
 	
-	public String getDescription() {
+	public String getHelp() {
 		return description;
 	}
 	
-	public Argument<E> setDescription(String description) {
+	public Argument<E> help(String description) {
 		this.description = description;
 		return this;
 	}
@@ -96,7 +96,7 @@ public abstract class Argument<E> {
 		return defaultValue != null;
 	}
 	
-	public Argument<E> setRequired(boolean required) {
+	public Argument<E> required(boolean required) {
 		this.required = required;
 		return this;
 	}
@@ -105,11 +105,16 @@ public abstract class Argument<E> {
 		return required;
 	}
 	
-	public Argument<E> addAction(Consumer<E> action) {
+	public Argument<E> consume(Consumer<E> action) {
 		if(this.action == null)
 			this.action = action;
 		else
 			this.action = this.action.andThen(action);
+		return this;
+	}
+	
+	public Argument<E> action(Runnable action) {
+		consume((x) -> action.run());
 		return this;
 	}
 
@@ -132,6 +137,8 @@ public abstract class Argument<E> {
 		} else
 			help.append("\t");
 		help.append("\t").append(description);
+		if(hasDefault())
+			help.append("\t(default: ").append(defaultValue).append(")");
 		return help.toString();
 	}
 

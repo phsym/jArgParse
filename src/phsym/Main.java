@@ -37,44 +37,46 @@ import phsym.argparse.arguments.Type;
 public final class Main implements Type {
 
 	public static void main(String[] args) {
-		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
+		ArgParse parser = new ArgParse("Test")
+			.description("This is a simple test with java 8")
+			.version("1.0")
+			.defautHelp()
+			.addDefaultErrorHandler()
+			.epilog("That's all you need");
+		
 		parser.add(INT, "-i")
-			.setRequired(true)
-			.setDescription("The i option")
-			.addAction(System.out::println);
+			.required(true)
+			.help("The i option")
+			.consume(System.out::println);
 		
 		parser.add(STRING, "-o")
-			.setDescription("The o option")
-			.addAction((x) -> System.out.println("The o option has been passed : " + x))
-			.addAction((x) -> System.out.println("And again : " + x));
+			.help("The o option")
+			.consume((x) -> System.out.println("The o option has been passed : " + x))
+			.consume((x) -> System.out.println("And again : " + x));
 		
 		parser.add(STRING_ARRAY, "-l")
-			.setSeparator(',')
-			.setDescription("List of strings")
-			.addAction(System.out::println);
+			.separator(',')
+			.help("List of strings")
+			.consume(System.out::println);
 		
 		parser.add(STRING_MAP, "-m")
-			.setSeparators(',', ':')
-			.setDescription("Map value")
-			.addAction(System.out::println);
+			.separators(',', ':')
+			.help("Map value")
+			.consume(System.out::println);
 		
 		parser.add(INT, "--default")
-			.setDescription("Test with default")
+			.help("Test with default")
 			.setDefault(12)
-			.addAction((i) -> System.out.println("Default : " + i));
+			.consume((i) -> System.out.println("Default : " + i));
 		
 		parser.add(STRING, "-c")
-			.setDescription("Multiple choices option")
+			.help("Multiple choices option")
 			.choices("AB", "CD", "EF")
-			.addAction((x) -> System.out.println("Choice : " + x));
+			.consume((x) -> System.out.println("Choice : " + x));
 		
 //		parser.add(INT, "-r")
 //			.setDescription("Required")
 //			.setRequired(true);
-		
-		parser.addHelpFlag();
-		parser.addVersionFlag();
-		parser.addDefaultErrorHandler();
 		
 		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
 		System.out.println(x);

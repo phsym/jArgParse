@@ -25,36 +25,38 @@ Of course Java 8 is required to build and run the library
 public class Main implements Type {
 
 	public static void main(String[] args) {
-		ArgParse parser = new ArgParse("Test", "1.0", "This is a simple test with java 8");
+		ArgParse parser = new ArgParse("Test")
+			.description("This is a simple test with java 8")
+			.version("1.0")
+			.defautHelp()
+			.addDefaultErrorHandler()
+			.epilog("That's all you need");
+			
 		parser.add(INT, "-i")
-			.setDescription("The i option")
-			.setRequired(true)
-			.addAction(System.out::println);
+			.help("The i option")
+			.required(true)
+			.consume(System.out::println);
 		
 		parser.add(STRING, "-o")
 			.setDefault("Default String")
-			.setDescription("The o option")
-			.addAction((x) -> System.out.println("The o option has been passed : " + x))
-			.addAction((x) -> System.out.println("And again : " + x));
+			.help("The o option")
+			.consume((x) -> System.out.println("The o option has been passed : " + x))
+			.consume((x) -> System.out.println("And again : " + x));
 		
 		parser.add(STRING_ARRAY, "-l")
-			.setSeparators(',', ':')
-			.setDescription("List of strings")
-			.addAction(System.out::println);
+			.separator(',')
+			.help("List of strings")
+			.consume(System.out::println);
 		
 		parser.add(STRING_MAP, "-m")
-			.setSeparators(',', ':')
-			.setDescription("Map value")
-			.addAction(System.out::println);
+			.separators(',', ':')
+			.help("Map value")
+			.consume(System.out::println);
 			
 		parser.add(STRING, "-c")
-			.setDescription("Multiple choices option")
+			.help("Multiple choices option")
 			.choices("AB", "CD", "EF")
-			.addAction((x) -> System.out.println("Choice : " + x));
-		
-		parser.addHelpFlag();
-		parser.addVersionFlag();
-		parser.addDefaultErrorHandler();
+			.consume((x) -> System.out.println("Choice : " + x));
 		
 		Map<String, Object> x = parser.parse(args);
 

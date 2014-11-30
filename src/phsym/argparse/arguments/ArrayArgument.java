@@ -40,7 +40,7 @@ public abstract class ArrayArgument<E> extends Argument<List<E>> {
 		super();
 	}
 	
-	public ArrayArgument<E> setSeparator(char separator) {
+	public ArrayArgument<E> separator(char separator) {
 		this.separator = separator;
 		return this;
 	}

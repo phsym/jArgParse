@@ -41,7 +41,7 @@ public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	public MapArgument() {
 	}
 	
-	public MapArgument<V> setSeparators(char entrySeparator, char keySeparator) {
+	public MapArgument<V> separators(char entrySeparator, char keySeparator) {
 		this.entrySeparator = entrySeparator;
 		this.keySeparator = keySeparator;
 		return this;

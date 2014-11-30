@@ -50,12 +50,11 @@ public class ArgParse {
 	private String prog;
 	private String version;
 	private String description;
+	private String epilog;
 	private Consumer<Exception> exceptionHandler;
 
-	public ArgParse(String prog, String version, String description) {
+	public ArgParse(String prog) {
 		this.prog = prog;
-		this.version = version;
-		this.description = description;
 		arguments = new LinkedList<>();
 	}
 	
@@ -94,11 +93,30 @@ public class ArgParse {
 	public <E, T extends Argument<E>> T add(Class<T> type, String name) {
 		try {
 			T arg = type.newInstance();
-			arg.setName(name);
+			arg.name(name);
 			return add(arg);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("FATAL : unexpected error", e);
 		}
+	}
+	
+	public ArgParse description(String description) {
+		this.description = description;
+		return this;
+	}
+	
+	public ArgParse version(String version) {
+		this.version = version;
+		add(Type.BOOL, "-v")
+			.help("Print version")
+			.action(this::printVersion)
+			.action(() -> System.exit(1));
+		return this;
+	}
+	
+	public ArgParse epilog(String epilog) {
+		this.epilog = epilog;
+		return this;
 	}
 	
 	public ArgParse onError(Consumer<Exception> handler) {
@@ -109,26 +127,21 @@ public class ArgParse {
 		return this;
 	}
 	
-	public void addDefaultErrorHandler() {
+	public ArgParse addDefaultErrorHandler() {
 		onError((e) -> System.err.println(e.getMessage()))
 			.onError((e) -> printHelp())
 			.onError((e) -> System.exit(1));
+		return this;
 	}
 	
-	public void addHelpFlag() {
+	public ArgParse defautHelp() {
 		add(Type.BOOL, "-h")
-			.setDescription("Print this help")
-			.addAction((b) -> printHelp())
-			.addAction((b) -> System.exit(1));
+			.help("Print this help")
+			.action(this::printHelp)
+			.action(() -> System.exit(1));
+		return this;
 	}
 	
-	public void addVersionFlag() {
-		add(Type.BOOL, "-v")
-			.setDescription("Print version")
-			.addAction((b) -> printVersion())
-			.addAction((b) -> System.exit(1));
-	}
-
 	public Map<String, Object> parse(String[] args) {
 		return parse(Arrays.asList(args));
 	}
@@ -162,14 +175,20 @@ public class ArgParse {
 	}
 
 	public void printVersion() {
-		System.out.println(prog + " " + version);
+		System.out.print(prog);
+		if(version != null)
+			System.out.print(" " + version);
+		System.out.println();
 	}
 	
 	public void printHelp() {
 		System.out.println("Usage:");
-		System.out.println(description);
+		if(description != null)
+			System.out.println(description);
 		arguments.stream()
 			.map(Argument::helpStr)
 			.forEach(System.out::println);
+		if(epilog != null && epilog.length() > 0)
+			System.out.println(epilog);
 	}
 }
