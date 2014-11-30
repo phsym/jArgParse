@@ -44,14 +44,18 @@ public final class Main implements Type {
 			.addDefaultErrorHandler()
 			.epilog("That's all you need");
 		
-		parser.label("Options:");
+		parser.label("Options :");
 		
 		parser.add(INT, "-i")
+			.positive()
+			.lt(20)
+			.andAssert((i) -> i % 2 == 0)
 			.required(true)
 			.help("The i option")
 			.consume(System.out::println);
-		
+			
 		parser.add(STRING, "-o")
+			.pattern("^t.t.$")
 			.help("The o option")
 			.consume((x) -> System.out.println("The o option has been passed : " + x))
 			.consume((x) -> System.out.println("And again : " + x));

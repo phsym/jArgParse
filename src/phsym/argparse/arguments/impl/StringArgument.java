@@ -29,17 +29,29 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.arguments.impl;
 
+import java.util.regex.Pattern;
+
 import phsym.argparse.arguments.Argument;
 import phsym.argparse.exceptions.ArgParseException;
+import phsym.argparse.exceptions.InvalidValueException;
 
 public class StringArgument extends Argument<String> {
+	
+	private Pattern pattern = null;
 	
 	public StringArgument() {
 		super();
 	}
 
+	public StringArgument pattern(String regex) {
+		pattern = Pattern.compile(regex);
+		return this;
+	}
+	
 	@Override
 	public String parse(String value) throws ArgParseException {
+		if(pattern != null && !pattern.matcher(value).matches())
+			throw new InvalidValueException(getName(), value, " does not match pattern " + pattern.pattern());
 		return value;
 	}
 

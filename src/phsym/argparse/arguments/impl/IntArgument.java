@@ -34,15 +34,41 @@ import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.InvalidValueException;
 
 public class IntArgument extends Argument<Integer> {
+	
+	private Integer lower = null;
+	private Integer upper = null;
 
 	public IntArgument() {
 		super();
+	}
+	
+	public IntArgument ge(int lowerBound) {
+		lower = lowerBound;
+		return this;
+	}
+	
+	public IntArgument lt(int upperBound) {
+		upper = upperBound;
+		return this;
+	}
+	
+	public IntArgument positive() {
+		return ge(0);
+	}
+	
+	public IntArgument negative() {
+		return lt(0);
 	}
 
 	@Override
 	public Integer parse(String value) throws ArgParseException {
 		try {
-			return Integer.parseInt(value);
+			int i = Integer.parseInt(value);
+			if(lower != null && i < lower)
+				throw new InvalidValueException(getName(), value, " must be equal or greater than " + lower);
+			if(upper != null && i >= upper)
+				throw new InvalidValueException(getName(), value, " Must be lower than " + upper);
+			return i;
 		} catch(NumberFormatException e) {
 			throw new InvalidValueException(getName(), value, e);
 		}

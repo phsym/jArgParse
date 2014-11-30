@@ -74,6 +74,10 @@ public class FileArgument extends Argument<File> {
 	private boolean readable = false;
 	private boolean executable = false;
 	
+	public FileArgument(){
+		super();
+	}
+	
 	public FileArgument exists(boolean value) {
 		this.exists = value;
 		return this;

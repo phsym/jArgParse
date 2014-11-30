@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.InvalidValueException;
@@ -42,6 +43,7 @@ public abstract class Argument<E> implements IHelpString {
 	private String name;
 	private String description;
 	private Consumer<E> action;
+	private Predicate<E> validation;
 	private boolean processed = false;
 	private boolean required = false;
 	private E defaultValue;
@@ -89,6 +91,7 @@ public abstract class Argument<E> implements IHelpString {
 	}
 	
 	public Argument<E> setDefault(E defaultValue) {
+		//TODO: Check against constraints if there are some
 		this.defaultValue = defaultValue;
 		return this;
 	}
@@ -104,6 +107,22 @@ public abstract class Argument<E> implements IHelpString {
 	
 	public boolean isRequired() {
 		return required;
+	}
+	
+	public Argument<E> andAssert(Predicate<E> predicate) {
+		if(validation == null)
+			validation = predicate;
+		else
+			validation = validation.and(predicate);
+		return this;
+	}
+	
+	public Argument<E> orAssert(Predicate<E> predicate) {
+		if(validation == null)
+			validation = predicate;
+		else
+			validation = validation.or(predicate);
+		return this;
 	}
 	
 	public Argument<E> consume(Consumer<E> action) {
@@ -145,15 +164,17 @@ public abstract class Argument<E> implements IHelpString {
 		return help.toString();
 	}
 
-	private E callDirect(E value) {
+	private E callDirect(E value) throws InvalidValueException {
+		if(value != null && validation != null && !validation.test(value))
+			throw new InvalidValueException(name, value.toString());
 		if(action != null)
 			action.accept(value);
 		processed = true;
 		return value;
 	}
 	
-	public E call() throws ValueRequiredException {
-		return callDirect((E)null);
+	public E call() throws ArgParseException {
+			return call(null);
 	}
 	
 	public E call(String value) throws ArgParseException {
@@ -165,7 +186,12 @@ public abstract class Argument<E> implements IHelpString {
 	}
 	
 	public E callDefault() {
-		return callDirect(defaultValue);
+		try {
+			return callDirect(defaultValue);
+		} catch (InvalidValueException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public abstract E parse(String value) throws ArgParseException;

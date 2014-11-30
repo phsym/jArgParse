@@ -35,12 +35,16 @@ public class Main implements Type {
 		parser.label("Options:");
 			
 		parser.add(INT, "-i")
+			.positive()
+			.lt(20)
+			.andAssert((i) -> i % 2 == 0)
 			.help("The i option")
 			.required(true)
 			.consume(System.out::println);
 		
 		parser.add(STRING, "-o")
-			.setDefault("Default String")
+			.pattern("^t.t.$")
+			.setDefault("titi")
 			.help("The o option")
 			.consume((x) -> System.out.println("The o option has been passed : " + x))
 			.consume((x) -> System.out.println("And again : " + x));

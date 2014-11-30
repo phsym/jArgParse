@@ -29,6 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.arguments.impl;
 
+
 import phsym.argparse.arguments.ArrayArgument;
 
 public class StringArrayArgument extends ArrayArgument<String> {
