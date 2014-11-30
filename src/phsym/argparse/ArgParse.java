@@ -195,7 +195,17 @@ public class ArgParse {
 	}
 	
 	public void printHelp() {
-		System.out.println("Usage:");
+		System.out.print("Usage: " + prog + " ");
+		arguments.stream()
+			.filter((x) -> x.isRequired())
+			.forEach((x) -> {
+				System.out.print(x.getName() + " ");
+				if(x.requireValue())
+					System.out.print(x.typeDesc() + " ");
+			});
+		System.out.println(" <options>");
+		
+		
 		if(description != null)
 			System.out.println(description);
 		helpers.stream()
