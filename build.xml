@@ -93,4 +93,7 @@
             <report format="frames" todir="${junit.output.dir}"/>
         </junitreport>
     </target>
+	
+	<target depends="test,create_jar" name="test_and_package"/>
+	
 </project>
