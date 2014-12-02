@@ -28,6 +28,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +46,7 @@ import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.ArgumentConflictException;
 import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
+import phsym.argparse.exceptions.ValueRequiredException;
 
 public class ArgParse {
 
@@ -155,36 +158,47 @@ public class ArgParse {
 		return label(" ");
 	}
 	
+	public Map<String, Object> parseTrhow(String[] args) throws ArgParseException {
+		return parseThrow(Arrays.asList(args));
+	}
+	
 	public Map<String, Object> parse(String[] args) {
 		return parse(Arrays.asList(args));
 	}
 	
-	public Map<String, Object> parse(List<String> args) {
+	public Map<String, Object> parseThrow(List<String> args) throws ArgParseException {
 		Map<String, Object> values = new HashMap<>();
-		try {
-			Iterator<String> it = args.iterator();
-			while (it.hasNext()) {
-				Object value = null;
-				String n = it.next();
-				Argument<?> arg = findByName(n)
-						.orElseThrow(() -> new UnknownArgumentException(n));
-				if(arg.requireValue()) {
-					if (it.hasNext())
-						value = arg.call(it.next());
-				}
+		Iterator<String> it = args.iterator();
+		while (it.hasNext()) {
+			Object value = null;
+			String n = it.next();
+			Argument<?> arg = findByName(n)
+					.orElseThrow(() -> new UnknownArgumentException(n));
+			if(arg.requireValue()) {
+				if (it.hasNext())
+					value = arg.call(it.next());
 				else
-					value = arg.call();
-				values.put(arg.getName(), value);
+					throw new ValueRequiredException("argument " + arg.getName() + " need a value");
 			}
-			processDefault(values);
-			checkRequired();
+			else
+				value = arg.call();
+			values.put(arg.getName(), value);
+		}
+		processDefault(values);
+		checkRequired();
+		return values;
+	}
+	
+	public Map<String, Object> parse(List<String> args) {
+		try {
+			return parseThrow(args);
 		} catch(ArgParseException e) {
 			if(exceptionHandler != null)
 				exceptionHandler.accept(e);
 			else
 				e.printStackTrace();
 		}
-		return values;
+		return new HashMap<>();
 	}
 
 	public void printVersion() {
@@ -194,24 +208,33 @@ public class ArgParse {
 		System.out.println();
 	}
 	
-	public void printHelp() {
-		System.out.print("Usage: " + prog + " ");
+	public String help() {
+		ByteArrayOutputStream str = new ByteArrayOutputStream();
+		PrintStream out = new PrintStream(str);
+		
+		out.print("Usage: " + prog + " ");
 		arguments.stream()
 			.filter((x) -> x.isRequired())
 			.forEach((x) -> {
-				System.out.print(x.getName() + " ");
+				out.print(x.getName() + " ");
 				if(x.requireValue())
-					System.out.print(x.typeDesc() + " ");
+					out.print(x.typeDesc() + " ");
 			});
-		System.out.println(" <options>");
+		out.println("<options>");
 		
 		
 		if(description != null)
-			System.out.println(description);
+			out.println(description);
 		helpers.stream()
 			.map(IHelpString::helpStr)
-			.forEach(System.out::println);
+			.forEach(out::println);
 		if(epilog != null && epilog.length() > 0)
-			System.out.println(epilog);
+			out.println(epilog);
+		out.flush();
+		return str.toString();
+	}
+	
+	public void printHelp() {
+		System.out.print(help());
 	}
 }
