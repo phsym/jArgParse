@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="create_jar" name="jArgParse">
     <property environment="env"/>
-	<property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
+	
+	<property name="build.out" value="build"/>
+	<property name="lib.out" value="${build.out}/lib"/>
+	<property name="bin.out" value="${build.out}/bin"/>
+	<property name="testbin.out" value="${build.out}/testbin"/>
+	<property name="junit.output.dir" value="${build.out}/junit"/>
+	
+	<property name="src.main" value="src/main/java"/>
+	<property name="src.test" value="src/test/java"/>
+	
 	<path id="JUnit 4.libraryclasspath">
-        <pathelement location="build/lib/junit-4.11.jar"/>
-        <pathelement location="build/lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="${lib.out}/junit-4.11.jar"/>
+        <pathelement location="${lib.out}/hamcrest-core-1.3.jar"/>
     </path>
 	<path id="jArgParse.classpath">
-        <pathelement location="build/bin"/>
+        <pathelement location="${bin.out}"/>
     </path>
 	<path id="test.classpath">
-		<pathelement location="build/testbin"/>
+		<pathelement location="${testbin.out}"/>
 		<path refid="jArgParse.classpath"/>
 		<path refid="JUnit 4.libraryclasspath"/>
 	</path>
 	
     <target name="init">
-    	<mkdir dir="build"/>
-        <mkdir dir="build/bin"/>
-    	<mkdir dir="build/lib"/>
+    	<mkdir dir="${build.out}"/>
+        <mkdir dir="${bin.out}"/>
+    	<mkdir dir="${lib.out}"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
                 <exclude name="**/*.launch"/>
@@ -32,48 +41,40 @@
     	
    	<target depends="init" name="init-test">
    		<!--<setproxy proxyhost="host" proxyport="port"/>-->
-		<mkdir dir="build/testbin"/>
-		<get src="http://search.maven.org/remotecontent?filepath=junit/junit/4.11/junit-4.11.jar" dest="build/lib/junit-4.11.jar"/>
-		<get src="http://search.maven.org/remotecontent?filepath=org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" dest="build/lib/hamcrest-core-1.3.jar"/>
+		<mkdir dir="${testbin.out}"/>
+		<get src="http://repo1.maven.org/maven2/junit/junit/4.11/junit-4.11.jar" dest="${lib.out}/junit-4.11.jar"/>
+		<get src="http://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" dest="${lib.out}/hamcrest-core-1.3.jar"/>
    	</target>
             		
             		
     <target name="clean">
-        <delete dir="build/bin"/>
-   		<delete dir="build/lib"/>
-    	<delete dir="build/testbin"/>
-    	<delete dir="junit"/>
-		<delete dir="build"/>
+		<delete dir="${build.out}"/>
     </target>
     <target depends="clean" name="cleanall"/>
 	
-    <target depends="build-subprojects,build-project" name="build"/>
-    <target name="build-subprojects"/>
-	
-    <target depends="init" name="build-project">
+    <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="build/bin" includeantruntime="false" source="${source}" target="${target}">
-            <src path="src"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${bin.out}" includeantruntime="false" source="${source}" target="${target}">
+            <src path="${src.main}"/>
             <classpath refid="jArgParse.classpath"/>
         </javac>
     </target>
 	
-	<target depends="build-project,init-test" name="build-tests">
+	<target depends="build,init-test" name="build-tests">
 		<echo message="${ant.project.name}: ${ant.file}"/>
-		<javac debug="true" debuglevel="${debuglevel}" destdir="build/testbin" includeantruntime="false" source="${source}" target="${target}">
-            <src path="tests"/>
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${testbin.out}" includeantruntime="false" source="${source}" target="${target}">
+            <src path="${src.test}"/>
             <classpath refid="test.classpath"/>
         </javac>
 	</target>
-    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
 	
 	<target depends="build" name="create_jar">
-        <jar destfile="build/jArgParse.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="${build.out}/jArgParse.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="phsym.Main"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="build/bin"/>
+            <fileset dir="${bin.out}"/>
         </jar>
     </target>
 	
@@ -82,7 +83,7 @@
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="xml"/>
         	<batchtest todir="${junit.output.dir}">
-        		<fileset dir="build/testbin"/>
+        		<fileset dir="${testbin.out}"/>
         	</batchtest>
             <classpath refid="test.classpath"/>
         </junit>
