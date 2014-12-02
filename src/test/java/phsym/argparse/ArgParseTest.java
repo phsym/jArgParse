@@ -34,7 +34,15 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Map;
 
+
+
+
+
 import org.junit.Test;
+
+
+
+
 
 import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgParseException;
@@ -110,6 +118,37 @@ public class ArgParseTest implements Type {
 	}
 	
 	@Test
+	public void test_callbacks() throws ArgParseException {
+		ArgParse parser = new ArgParse("Test");
+		parser.add(STRING, "-s")
+			.action(() -> {throw new RuntimeException("test");});
+		parser.add(STRING, "-t")
+			.consume((str) -> {throw new RuntimeException(str);});
+		
+		try {
+			parser.parseThrow(Arrays.asList("-s", "foo"));
+			fail("Exception was not thrown");
+		} catch(RuntimeException e){
+			assertEquals(e.getMessage(), "test");
+		}
+		try {
+			parser.parseThrow(Arrays.asList("-t", "bar"));
+			fail("Exception was not thrown");
+		} catch(RuntimeException e){
+			assertEquals(e.getMessage(), "bar");
+		}
+	}
+	
+	@Test
+	public void test_default() {
+		ArgParse parser = new ArgParse("Test");
+		parser.add(INT, "-i").setDefault(13);
+		Object res = parser.parse(Arrays.asList()).get("-i");
+		assertNotNull(res);
+		assertEquals(res, 13);
+	}
+	
+	@Test
 	public void test_int() throws ArgParseException {
 		ArgParse parser = new ArgParse("Test");
 		parser.add(INT, "-i")
@@ -130,6 +169,21 @@ public class ArgParseTest implements Type {
 		
 		try {
 			parser.parseThrow(Arrays.asList("-i", "foo"));
+			fail("Exception was not thrown");
+		} catch(InvalidValueException e){}
+		
+		try {
+			parser.parseThrow(Arrays.asList("-i", "-2"));
+			fail("Exception was not thrown");
+		} catch(InvalidValueException e){}
+		
+		try {
+			parser.parseThrow(Arrays.asList("-i", "20"));
+			fail("Exception was not thrown");
+		} catch(InvalidValueException e){}
+		
+		try {
+			parser.parseThrow(Arrays.asList("-i", "13"));
 			fail("Exception was not thrown");
 		} catch(InvalidValueException e){}
 		
