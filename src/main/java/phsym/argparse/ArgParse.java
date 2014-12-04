@@ -49,7 +49,7 @@ import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
 public class ArgParse {
-
+	
 	private List<Argument<?>> arguments;
 	private List<IHelpString> helpers;
 	private String prog;
@@ -74,7 +74,7 @@ public class ArgParse {
 		arguments.stream()
 			.filter(Argument::hasNotBeenProcessed)
 			.filter(Argument::hasDefault)
-			.forEach((a) -> values.put(a.getName(), a.callDefault()));
+			.forEach((a) -> values.put(a.getDestination(), a.callDefault()));
 	}
 	
 	private void checkRequired() throws MissingArgumentException {
@@ -182,7 +182,7 @@ public class ArgParse {
 			}
 			else
 				value = arg.call();
-			values.put(arg.getName(), value);
+			values.put(arg.getDestination(), value);
 		}
 		processDefault(values);
 		checkRequired();

@@ -48,6 +48,7 @@ public abstract class Argument<E> implements IHelpString {
 	private boolean required = false;
 	private E defaultValue;
 	private List<String> choices;
+	private String destination;
 	
 	public Argument() {
 		
@@ -68,6 +69,18 @@ public abstract class Argument<E> implements IHelpString {
 	public Argument<E> name(String shortName) {
 		this.name = shortName;
 		return this;
+	}
+	
+	public Argument<E> dest(String dest) {
+		this.destination = dest;
+		return this;
+	}
+	
+	public String getDestination() {
+		if(destination != null)
+			return destination;
+		else
+			return name.replaceFirst("--?", "");
 	}
 	
 	public String getHelp() {

@@ -57,6 +57,7 @@ public class Main implements Type {
 		
 		parser.add(STRING_MAP, "-m")
 			.separators(',', ':')
+			.dest("map")
 			.help("Map value")
 			.consume(System.out::println);
 			

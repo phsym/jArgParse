@@ -67,6 +67,7 @@ public final class Main implements Type {
 		
 		parser.add(STRING_MAP, "-m")
 			.separators(',', ':')
+			.dest("map")
 			.help("Map value")
 			.consume(System.out::println);
 		
@@ -97,6 +98,6 @@ public final class Main implements Type {
 		
 		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
 		System.out.println(x);
-		parser.printHelp();
+//		parser.printHelp();
 	}
 }
