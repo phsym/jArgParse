@@ -35,7 +35,7 @@ public class Main implements Type {
 			
 		parser.label("Options:");
 			
-		parser.add(INT, "-i")
+		parser.add(INT, "-i", "--int")
 			.positive()
 			.lt(20)
 			.andAssert((i) -> i % 2 == 0)

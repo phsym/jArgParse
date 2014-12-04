@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -66,7 +67,13 @@ public class ArgParse {
 	
 	private Optional<Argument<?>> findByName(String name) {
 		return arguments.stream()
-			.filter((a) -> name.equals(a.getName()))
+			.filter((a) -> a.hasName(name))
+			.findFirst();
+	}
+	
+	private Optional<Argument<?>> findOneByNames(String ... names) {
+		return arguments.stream()
+			.filter((a) -> a.hasOneOfNames(names))
 			.findFirst();
 	}
 	
@@ -83,24 +90,25 @@ public class ArgParse {
 			.filter(Argument::isRequired)
 			.findFirst();
 		if(missing.isPresent())
-			throw new MissingArgumentException(missing.get().getName());
+			throw new MissingArgumentException(missing.get());
 	}
 
 	public <E, T extends Argument<E>> T add(T arg) {
-		if(arg == null)
-			throw new NullPointerException("arg must be non null");
-		String name = arg.getName();
-		if(findByName(arg.getName()).isPresent())
-			throw new ArgumentConflictException("Argument " + name + " is already registered");
+		Objects.requireNonNull(arg, "arg must be non null");
+		String[] names = arg.getNames();
+		Objects.requireNonNull(names, "Argument needs at least 1 name");
+
+		if(findOneByNames(names).isPresent())
+			throw new ArgumentConflictException("Argument " + names[0] + " is already registered");
 		arguments.add(arg);
 		helpers.add(arg);
 		return arg;
 	}
 	
-	public <E, T extends Argument<E>> T add(Class<T> type, String name) {
+	public <E, T extends Argument<E>> T add(Class<T> type, String name, String ... otherNames) {
 		try {
 			T arg = type.newInstance();
-			arg.name(name);
+			arg.names(name, otherNames);
 			return add(arg);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException("FATAL : unexpected error", e);
@@ -178,7 +186,7 @@ public class ArgParse {
 				if (it.hasNext())
 					value = arg.call(it.next());
 				else
-					throw new ValueRequiredException("argument " + arg.getName() + " need a value");
+					throw new ValueRequiredException(arg);
 			}
 			else
 				value = arg.call();
@@ -216,7 +224,7 @@ public class ArgParse {
 		arguments.stream()
 			.filter((x) -> x.isRequired())
 			.forEach((x) -> {
-				out.print(x.getName() + " ");
+				out.print(x.getNames()[0] + " ");
 				if(x.requireValue())
 					out.print(x.typeDesc() + " ");
 			});

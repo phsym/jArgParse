@@ -65,12 +65,12 @@ public class IntArgument extends Argument<Integer> {
 		try {
 			int i = Integer.parseInt(value);
 			if(lower != null && i < lower)
-				throw new InvalidValueException(getName(), value, " must be equal or greater than " + lower);
+				throw new InvalidValueException(getNames()[0], value, " must be equal or greater than " + lower);
 			if(upper != null && i >= upper)
-				throw new InvalidValueException(getName(), value, " Must be lower than " + upper);
+				throw new InvalidValueException(getNames()[0], value, " Must be lower than " + upper);
 			return i;
 		} catch(NumberFormatException e) {
-			throw new InvalidValueException(getName(), value, e);
+			throw new InvalidValueException(getNames()[0], value, e);
 		}
 	}
 

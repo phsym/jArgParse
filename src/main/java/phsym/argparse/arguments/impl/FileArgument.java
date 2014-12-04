@@ -117,11 +117,11 @@ public class FileArgument extends Argument<File> {
 				}
 		}
 		if(exists && !file.exists())
-			throw new InvalidValueException(this.getName(), file.getAbsolutePath(), " must exists");
+			throw new InvalidValueException(this.getNames()[0], file.getAbsolutePath(), " must exists");
 		if(directory && file.exists() && !file.isDirectory())
-			throw new InvalidValueException(this.getName(), file.getAbsolutePath(), " must be a directory");
+			throw new InvalidValueException(this.getNames()[0], file.getAbsolutePath(), " must be a directory");
 		else if(!directory && file.exists() && !file.isFile())
-			throw new InvalidValueException(this.getName(), file.getAbsolutePath(), " must be a file");
+			throw new InvalidValueException(this.getNames()[0], file.getAbsolutePath(), " must be a file");
 		
 		return file;
 	}

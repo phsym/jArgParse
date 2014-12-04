@@ -29,15 +29,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.exceptions;
 
+import phsym.argparse.arguments.Argument;
+
 public class MissingArgumentException extends ArgParseException {
 
 	private static final long serialVersionUID = -7819296322556485892L;
 
-	public MissingArgumentException(String argumentName) {
-		super("Argument " + argumentName + " is missing");
+	public MissingArgumentException(Argument<?> argument) {
+		super("Argument " + argument.getNames()[0] + " is missing");
 	}
 
-	public MissingArgumentException(String argumentName, Throwable cause) {
-		super("Argument " + argumentName + " is missing", cause);
+	public MissingArgumentException(Argument<?> argument, Throwable cause) {
+		super("Argument " + argument.getNames()[0] + " is missing", cause);
 	}
 }

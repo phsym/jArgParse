@@ -46,7 +46,7 @@ public final class Main implements Type {
 		
 		parser.label("Options :");
 		
-		parser.add(INT, "-i")
+		parser.add(INT, "-i", "--int")
 			.positive()
 			.lt(20)
 			.andAssert((i) -> i % 2 == 0)
@@ -96,8 +96,8 @@ public final class Main implements Type {
 //			.setDescription("Required")
 //			.setRequired(true);
 		
-		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "-i", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
+		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "--int", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
 		System.out.println(x);
-//		parser.printHelp();
+		parser.printHelp();
 	}
 }

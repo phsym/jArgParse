@@ -40,7 +40,7 @@ import phsym.argparse.exceptions.ValueRequiredException;
 
 public abstract class Argument<E> implements IHelpString {
 
-	private String name;
+	private String[] names;
 	private String description;
 	private Consumer<E> action;
 	private Predicate<E> validation;
@@ -62,12 +62,33 @@ public abstract class Argument<E> implements IHelpString {
 		return !processed;
 	}
 	
-	public String getName() {
-		return name;
+	public boolean hasName(String name) {
+		if(name == null)
+			return false;
+		for(String n : names) {
+			if(n.equals(name))
+				return true;
+		}
+		return false;
 	}
 	
-	public Argument<E> name(String shortName) {
-		this.name = shortName;
+	public boolean hasOneOfNames(String ... names) {
+		for(String n : names) {
+			if(hasName(n))
+				return true;
+		}
+		return false;
+	}
+	
+	public String[] getNames() {
+		return names;
+	}
+	
+	public Argument<E> names(String firstName, String ... names) {
+		this.names = new String[names.length + 1];
+		this.names[0] = firstName;
+		for(int i = 0; i < names.length; i++)
+			this.names[i+1] = names[i];
 		return this;
 	}
 	
@@ -80,7 +101,7 @@ public abstract class Argument<E> implements IHelpString {
 		if(destination != null)
 			return destination;
 		else
-			return name.replaceFirst("--?", "");
+			return names[0].replaceFirst("--?", "");
 	}
 	
 	public String getHelp() {
@@ -94,7 +115,7 @@ public abstract class Argument<E> implements IHelpString {
 	
 	public Argument<E> choices(String ... choices) {
 		if(!this.requireValue())
-			throw new RuntimeException("Argument " + this.name + " can't have choices since no value is required");
+			throw new RuntimeException("Argument " + this.names[0] + " can't have choices since no value is required");
 		this.choices = Arrays.asList(choices);
 		return this;
 	}
@@ -154,7 +175,11 @@ public abstract class Argument<E> implements IHelpString {
 	@Override
 	public String helpStr() {
 		StringBuilder help = new StringBuilder("    ");
-		help.append(name);
+		for(int i = 0; i < names.length; i++) {
+			help.append(names[i]);
+			if(i < names.length-1)
+				help.append(", ");
+		}
 		help.append("\t");
 		if(requireValue()) {
 			if(choices == null || choices.size() == 0)
@@ -179,7 +204,7 @@ public abstract class Argument<E> implements IHelpString {
 
 	private E callDirect(E value) throws InvalidValueException {
 		if(value != null && validation != null && !validation.test(value))
-			throw new InvalidValueException(name, value.toString());
+			throw new InvalidValueException(names[0], value.toString());
 		if(action != null)
 			action.accept(value);
 		processed = true;
@@ -192,9 +217,9 @@ public abstract class Argument<E> implements IHelpString {
 	
 	public E call(String value) throws ArgParseException {
 		if(value == null && requireValue())
-			throw new ValueRequiredException(name);
+			throw new ValueRequiredException(this);
 		if(choices != null && choices.size() > 0 && !choices.contains(value))
-			throw new InvalidValueException(this.name, value, this.choices);
+			throw new InvalidValueException(names[0], value, this.choices);
 		return callDirect(parse(value));
 	}
 	

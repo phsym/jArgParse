@@ -51,7 +51,7 @@ public class StringArgument extends Argument<String> {
 	@Override
 	public String parse(String value) throws ArgParseException {
 		if(pattern != null && !pattern.matcher(value).matches())
-			throw new InvalidValueException(getName(), value, " does not match pattern " + pattern.pattern());
+			throw new InvalidValueException(getNames()[0], value, " does not match pattern " + pattern.pattern());
 		return value;
 	}
 

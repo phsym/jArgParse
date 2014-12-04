@@ -29,10 +29,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.exceptions;
 
+import phsym.argparse.arguments.Argument;
+
 public class ValueRequiredException extends ArgParseException {
 	private static final long serialVersionUID = 1L;
 	
-	public ValueRequiredException(String argument) {
-		super("Argument " + argument + " require a value");
+	public ValueRequiredException(Argument<?> argument) {
+		super("Argument " + argument.getNames()[0] + " require a value");
 	}
 }
