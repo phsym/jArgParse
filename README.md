@@ -12,14 +12,6 @@
 **jArgParse** is a command line argument parser for Java 8.
 It's currently a work in progress
 
-## How to build
-Checkout the project, then in a terminal, go to the project directory and invoke the Ant builder with 
-
-> ant
-
-Build result is a **jArgParse.jar** file <br>
-Of course Java 8 is required to build and run the library
-
 ## How To Use :
 
 ```java
