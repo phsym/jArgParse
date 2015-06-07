@@ -226,9 +226,9 @@ public class ArgParse {
 			.forEach((x) -> {
 				out.print(x.getNames()[0] + " ");
 				if(x.requireValue())
-					out.print(x.typeDesc() + " ");
+					out.print("<" + x.typeDesc() + "> ");
 			});
-		out.println("<options>");
+		out.println("[options]");
 		
 		
 		if(description != null)
