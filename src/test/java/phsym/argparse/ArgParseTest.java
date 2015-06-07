@@ -58,7 +58,7 @@ public class ArgParseTest implements Type {
 		ArgParse argparse = new ArgParse("Test");
 		String[] help = argparse.help().split("\n");
 		assertEquals(help.length, 1);
-		assertTrue(help[0].trim().equals("Usage: Test <options>"));
+		assertTrue(help[0].trim().equals("Usage: Test [options]"));
 	}
 
 	
@@ -72,7 +72,7 @@ public class ArgParseTest implements Type {
 			.epilog("Epilog");
 		String[] help = argparse.help().split("\n");
 		assertEquals(help.length, 5);
-		assertTrue(help[0].trim().equals("Usage: Test <options>"));
+		assertTrue(help[0].trim().equals("Usage: Test [options]"));
 		assertTrue(help[1].trim().equals("Description text"));
 		assertTrue(help[2].contains("-v"));
 		assertTrue(help[2].contains("Print version"));
@@ -101,7 +101,7 @@ public class ArgParseTest implements Type {
 		
 		String[] help = parser.help().split("\n");
 		assertEquals(help.length, 2);
-		assertTrue(help[0].trim().equals("Usage: Test -i int <options>"));
+		assertTrue(help[0].trim().equals("Usage: Test -i <int> [options]"));
 		try {
 			parser.parseThrow(Arrays.asList());
 			fail("Exception was not thrown");
@@ -143,7 +143,7 @@ public class ArgParseTest implements Type {
 	public void test_default() {
 		ArgParse parser = new ArgParse("Test");
 		parser.add(INT, "-i").setDefault(13);
-		Object res = parser.parse(Arrays.asList()).get("-i");
+		Object res = parser.parse(Arrays.asList()).get("i");
 		assertNotNull(res);
 		assertEquals(res, 13);
 	}
@@ -158,7 +158,7 @@ public class ArgParseTest implements Type {
 			.help("The i option");
 		String[] help = parser.help().split("\n");
 		assertEquals(help.length, 2);
-		assertTrue(help[0].trim().equals("Usage: Test <options>"));
+		assertTrue(help[0].trim().equals("Usage: Test [options]"));
 		assertTrue(help[1].contains("-i"));
 		assertTrue(help[1].contains("The i option"));
 		
@@ -189,6 +189,6 @@ public class ArgParseTest implements Type {
 		
 		Map<String, Object> res = parser.parseThrow(Arrays.asList("-i", "12"));
 		assertNotNull(res);
-		assertEquals(res.get("-i"), 12);
+		assertEquals(res.get("i"), 12);
 	}
 }
