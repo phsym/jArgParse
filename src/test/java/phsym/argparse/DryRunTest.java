@@ -1,13 +1,10 @@
 package phsym.argparse;
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.Test;
 
-import phsym.argparse.ArgParse;
 import phsym.argparse.arguments.Type;
 
 //TODO : Split those into smaller tests
