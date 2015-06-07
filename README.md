@@ -1,5 +1,6 @@
 ![License](http://img.shields.io/badge/license-BSD-lightgrey.svg)
 [![Build Status](https://travis-ci.org/phsym/jArgParse.svg)](https://travis-ci.org/phsym/jArgParse)
+[![Coverage Status](https://coveralls.io/repos/phsym/jArgParse/badge.svg?branch=master)](https://coveralls.io/r/phsym/jArgParse?branch=master)
 
 # jArgParse
 

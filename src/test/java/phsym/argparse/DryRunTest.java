@@ -1,42 +1,24 @@
-/*
-Copyright (c) 2014, Pierre-Henri Symoneaux
-All rights reserved.
+package phsym.argparse;
+import static org.junit.Assert.*;
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of jArgParse nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-package phsym;
 import java.util.Arrays;
 import java.util.Map;
+
+import org.junit.AfterClass;
+import org.junit.Test;
 
 import phsym.argparse.ArgParse;
 import phsym.argparse.arguments.Type;
 
-public final class Main implements Type {
+//TODO : Split those into smaller tests
+public class DryRunTest implements Type {
 
-	public static void main(String[] args) {
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+
+	@Test
+	public void dry_run() {
 		ArgParse parser = new ArgParse("Test")
 			.description("This is a simple test with java 8")
 			.version("1.0")
@@ -92,12 +74,13 @@ public final class Main implements Type {
 			.directory(true)
 			.help("A Directory");
 		
-//		parser.add(INT, "-r")
-//			.setDescription("Required")
-//			.setRequired(true);
+	//	parser.add(INT, "-r")
+	//		.setDescription("Required")
+	//		.setRequired(true);
 		
 		Map<String, Object> x = parser.parse(Arrays.asList("-o", "toto", "--int", "12", "-l", "az,ze, er , rt", "-m", "tata:yoyo, titi: tutu"));;
 		System.out.println(x);
 		parser.printHelp();
 	}
+
 }
