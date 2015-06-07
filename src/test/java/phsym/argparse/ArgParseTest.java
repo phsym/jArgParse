@@ -38,7 +38,9 @@ import java.util.Map;
 
 
 
+
 import org.junit.Test;
+
 
 
 
@@ -46,6 +48,7 @@ import org.junit.Test;
 
 import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgParseException;
+import phsym.argparse.exceptions.ArgumentConflictException;
 import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
@@ -146,6 +149,18 @@ public class ArgParseTest implements Type {
 		Object res = parser.parse(Arrays.asList()).get("i");
 		assertNotNull(res);
 		assertEquals(res, 13);
+	}
+	
+	@Test
+	public void test_conflict() {
+		ArgParse parser = new ArgParse("Test");
+		parser.add(INT, "-i");
+		try {
+			parser.add(INT, "-i");
+			fail("No ArgumentConflictException thrown");
+		} catch(ArgumentConflictException e) {
+			
+		}
 	}
 	
 	@Test
