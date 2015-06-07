@@ -166,7 +166,7 @@ public class ArgParse {
 		return label(" ");
 	}
 	
-	public Map<String, Object> parseTrhow(String[] args) throws ArgParseException {
+	public Map<String, Object> parseThrow(String[] args) throws ArgParseException {
 		return parseThrow(Arrays.asList(args));
 	}
 	
