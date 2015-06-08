@@ -49,6 +49,11 @@ import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
+/**
+ * Argument parsing is built with this class
+ * @author phsym
+ *
+ */
 public class ArgParse {
 	
 	private List<Argument<?>> arguments;
@@ -59,31 +64,53 @@ public class ArgParse {
 	private String epilog;
 	private Consumer<Exception> exceptionHandler;
 
+	/**
+	 * Create a new argument parser
+	 * @param prog The program name
+	 */
 	public ArgParse(String prog) {
 		this.prog = prog;
 		arguments = new LinkedList<>();
 		helpers = new LinkedList<>();
 	}
 	
+	/**
+	 * Look for an argument definition by its name
+	 * @param name The argument name
+	 * @return An optional {@link Argument} if it exists
+	 */
 	private Optional<Argument<?>> findByName(String name) {
 		return arguments.stream()
 			.filter((a) -> a.hasName(name))
 			.findFirst();
 	}
 	
+	/**
+	 * Look for an argument having one of the given names. Return the first found
+	 * @param names Argument names to look for
+	 * @return An optional {@link Argument} if found
+	 */
 	private Optional<Argument<?>> findOneByNames(String ... names) {
 		return arguments.stream()
 			.filter((a) -> a.hasOneOfNames(names))
 			.findFirst();
 	}
 	
+	/**
+	 * Process default values for arguments that have not been parsed
+	 * @param values The map that will contain results
+	 */
 	private void processDefault(Map<String, Object> values) {
 		arguments.stream()
 			.filter(Argument::hasNotBeenProcessed)
 			.filter(Argument::hasDefault)
-			.forEach((a) -> values.put(a.getDestination(), a.callDefault()));
+			.forEach((a) -> values.put(a.getDestination(), a.processDefault()));
 	}
 	
+	/**
+	 * Check that all required arguments have been parsed
+	 * @throws MissingArgumentException if any required argument is missing
+	 */
 	private void checkRequired() throws MissingArgumentException {
 		Optional<Argument<?>> missing = arguments.stream()
 			.filter(Argument::hasNotBeenProcessed)
@@ -93,6 +120,11 @@ public class ArgParse {
 			throw new MissingArgumentException(missing.get());
 	}
 
+	/**
+	 * Add a argument
+	 * @param arg The argument to add
+	 * @return The added argument so it can be configured
+	 */
 	public <E, T extends Argument<E>> T add(T arg) {
 		Objects.requireNonNull(arg, "arg must be non null");
 		String[] names = arg.getNames();
@@ -105,6 +137,13 @@ public class ArgParse {
 		return arg;
 	}
 	
+	/**
+	 * Add an argument
+	 * @param type The class of the argument to add
+	 * @param name The name for this argument (eg: "-a")
+	 * @param otherNames Any additional names for the argument (eg: "--arg")
+	 * @return The added argument so it can be configured
+	 */
 	public <E, T extends Argument<E>> T add(Class<T> type, String name, String ... otherNames) {
 		try {
 			T arg = type.newInstance();
@@ -115,11 +154,21 @@ public class ArgParse {
 		}
 	}
 	
+	/**
+	 * Add a description for the program
+	 * @param description The description
+	 * @return this
+	 */
 	public ArgParse description(String description) {
 		this.description = description;
 		return this;
 	}
 	
+	/**
+	 * Add a version string
+	 * @param version The version string
+	 * @return this
+	 */
 	public ArgParse version(String version) {
 		this.version = version;
 		add(Type.BOOL, "-v")
@@ -129,11 +178,21 @@ public class ArgParse {
 		return this;
 	}
 	
+	/**
+	 * Add an epilog
+	 * @param epilog The epilog string
+	 * @return this
+	 */
 	public ArgParse epilog(String epilog) {
 		this.epilog = epilog;
 		return this;
 	}
 	
+	/**
+	 * Add an a new error handler, or add it after the previous that has been added
+	 * @param handler The handler
+	 * @return this
+	 */
 	public ArgParse onError(Consumer<Exception> handler) {
 		if(exceptionHandler == null)
 			exceptionHandler = handler;
@@ -142,6 +201,11 @@ public class ArgParse {
 		return this;
 	}
 	
+	/**
+	 * Add the default error handler which simplye prints the error message,
+	 * then prints the help, then exists
+	 * @return this
+	 */
 	public ArgParse addDefaultErrorHandler() {
 		onError((e) -> System.err.println(e.getMessage()))
 			.onError((e) -> printHelp())
@@ -149,6 +213,10 @@ public class ArgParse {
 		return this;
 	}
 	
+	/**
+	 * Configure the default "-h" argument
+	 * @return this
+	 */
 	public ArgParse defaultHelp() {
 		add(Type.BOOL, "-h")
 			.help("Print this help")
@@ -157,23 +225,49 @@ public class ArgParse {
 		return this;
 	}
 	
+	/**
+	 * Append line in the help text
+	 * @param label The line to add
+	 * @return this
+	 */
 	public ArgParse label(String label) {
 		helpers.add(() -> label);
 		return this;
 	}
 	
+	/**
+	 * Add an empty line in the help text
+	 * @return this
+	 */
 	public ArgParse space() {
 		return label(" ");
 	}
 	
+	/**
+	 * Parse arguments and throw excpetion in case of failure. No error handler will be called
+	 * @param args Arguments to parse
+	 * @return A map with parsing results
+	 * @throws ArgParseException Argument parsing failed
+	 */
 	public Map<String, Object> parseThrow(String[] args) throws ArgParseException {
 		return parseThrow(Arrays.asList(args));
 	}
 	
+	/**
+	 * Parse arguments and call error handlers in case of failure
+	 * @param args Arguments to parse
+	 * @return A map with parsing results
+	 */
 	public Map<String, Object> parse(String[] args) {
 		return parse(Arrays.asList(args));
 	}
 	
+	/**
+	 * Parse arguments and throw excpetion in case of failure. No error handler will be called
+	 * @param args Arguments to parse
+	 * @return A map with parsing results
+	 * @throws ArgParseException Argument parsing failed
+	 */
 	public Map<String, Object> parseThrow(List<String> args) throws ArgParseException {
 		Map<String, Object> values = new HashMap<>();
 		Iterator<String> it = args.iterator();
@@ -184,12 +278,12 @@ public class ArgParse {
 					.orElseThrow(() -> new UnknownArgumentException(n));
 			if(arg.requireValue()) {
 				if (it.hasNext())
-					value = arg.call(it.next());
+					value = arg.process(it.next());
 				else
 					throw new ValueRequiredException(arg);
 			}
 			else
-				value = arg.call();
+				value = arg.process();
 			values.put(arg.getDestination(), value);
 		}
 		processDefault(values);
@@ -197,6 +291,11 @@ public class ArgParse {
 		return values;
 	}
 	
+	/**
+	 * Parse arguments and call error handlers in case of failure
+	 * @param args Arguments to parse
+	 * @return A map with parsing results
+	 */
 	public Map<String, Object> parse(List<String> args) {
 		try {
 			return parseThrow(args);
@@ -209,6 +308,9 @@ public class ArgParse {
 		return new HashMap<>();
 	}
 
+	/**
+	 * Print version string
+	 */
 	public void printVersion() {
 		System.out.print(prog);
 		if(version != null)
@@ -216,6 +318,9 @@ public class ArgParse {
 		System.out.println();
 	}
 	
+	/**
+	 * @return The full help text
+	 */
 	public String help() {
 		ByteArrayOutputStream str = new ByteArrayOutputStream();
 		PrintStream out = new PrintStream(str);
@@ -242,6 +347,9 @@ public class ArgParse {
 		return str.toString();
 	}
 	
+	/**
+	 * Print the help text
+	 */
 	public void printHelp() {
 		System.out.print(help());
 	}

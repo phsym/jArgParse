@@ -29,9 +29,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.arguments;
 
+/**
+ * Represent an object that has a help description
+ * @author phsym
+ *
+ */
 @FunctionalInterface
 public interface IHelpString {
 
+	/**
+	 * Get the help string 
+	 */
 	public abstract String helpStr();
 
 }

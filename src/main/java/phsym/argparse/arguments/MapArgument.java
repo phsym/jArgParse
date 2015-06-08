@@ -37,8 +37,8 @@ import phsym.argparse.exceptions.ArgParseException;
 
 public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	
-	private char entrySeparator = ',';
-	private char keySeparator = ':';
+	protected char entrySeparator = ',';
+	protected char keySeparator = ':';
 	
 	public MapArgument() {
 	}
@@ -63,7 +63,7 @@ public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	
 	@Override
 	public Argument<Map<String, V>> choices(String... choices) {
-		throw new RuntimeException(getClass().getName() + " canoot have multiple choices");
+		throw new RuntimeException(getClass().getName() + " cannot have multiple choices");
 	}
 	
 	protected abstract V parseValue(String value);

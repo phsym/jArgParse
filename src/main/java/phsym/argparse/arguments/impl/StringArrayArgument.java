@@ -50,8 +50,7 @@ public class StringArrayArgument extends ArrayArgument<String> {
 
 	@Override
 	public String typeDesc() {
-		//TODO: Get separator from superclass
-		return "string[, ...]";
+		return "string[" + separator + " ...]";
 	}
 
 }

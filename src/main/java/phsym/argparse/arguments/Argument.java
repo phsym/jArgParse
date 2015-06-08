@@ -34,10 +34,17 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import phsym.argparse.ArgParse;
 import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
+/**
+ * Represent an argument configuration for {@link ArgParse} class
+ * @author phsym
+ *
+ * @param <E> The type of the argument value resulting from parsing
+ */
 public abstract class Argument<E> implements IHelpString {
 
 	private String[] names;
@@ -50,18 +57,30 @@ public abstract class Argument<E> implements IHelpString {
 	private List<String> choices;
 	private String destination;
 	
+	/**
+	 * Default empty constructor
+	 */
 	public Argument() {
 		
 	}
 	
+	/**
+	 * Check if this argument has already been parsed
+	 */
 	public boolean hasBeenProcessed() {
 		return processed;
 	}
 	
+	/**
+	 * Check if this argument has still not been parsed
+	 */
 	public boolean hasNotBeenProcessed() {
 		return !processed;
 	}
 	
+	/**
+	 * Check if this arguent has the given name
+	 */
 	public boolean hasName(String name) {
 		if(name == null)
 			return false;
@@ -72,6 +91,10 @@ public abstract class Argument<E> implements IHelpString {
 		return false;
 	}
 	
+	/**
+	 * Check if this argument has at least one of the given names
+	 * @param names The names to look for
+	 */
 	public boolean hasOneOfNames(String ... names) {
 		for(String n : names) {
 			if(hasName(n))
@@ -80,10 +103,19 @@ public abstract class Argument<E> implements IHelpString {
 		return false;
 	}
 	
+	/**
+	 * @return An array of this argument's names
+	 */
 	public String[] getNames() {
 		return names;
 	}
 	
+	/**
+	 * Set the names for this argument (don't forget dashes, eg : "-a" or "--args")
+	 * @param firstName The main and mandatory name
+	 * @param names Additional names
+	 * @return this
+	 */
 	public Argument<E> names(String firstName, String ... names) {
 		this.names = new String[names.length + 1];
 		this.names[0] = firstName;
@@ -92,11 +124,20 @@ public abstract class Argument<E> implements IHelpString {
 		return this;
 	}
 	
+	/**
+	 * Set destination name for identifying argument in map containing results
+	 * @param dest The destination name
+	 * @return this
+	 */
 	public Argument<E> dest(String dest) {
 		this.destination = dest;
 		return this;
 	}
 	
+	/**
+	 * Get the destination name.
+	 * @return Either the value set with {@link #dest(String)}, or will return the main argument name with dashes removed
+	 */
 	public String getDestination() {
 		if(destination != null)
 			return destination;
@@ -104,15 +145,28 @@ public abstract class Argument<E> implements IHelpString {
 			return names[0].replaceFirst("--?", "");
 	}
 	
+	/**
+	 * @return The description string set with {@link #help(String)}
+	 */
 	public String getHelp() {
 		return description;
 	}
 	
+	/**
+	 * Set the description to be printed in help
+	 * @param description The description
+	 * @return this
+	 */
 	public Argument<E> help(String description) {
 		this.description = description;
 		return this;
 	}
 	
+	/**
+	 * Limit possible argument values to multiple choice
+	 * @param choices The choices to limit to
+	 * @return this
+	 */
 	public Argument<E> choices(String ... choices) {
 		if(!this.requireValue())
 			throw new RuntimeException("Argument " + this.names[0] + " can't have choices since no value is required");
@@ -120,29 +174,54 @@ public abstract class Argument<E> implements IHelpString {
 		return this;
 	}
 	
+	/**
+	 * Get the default argument value
+	 * @return The default value set with {@link #setDefault(Object)}
+	 */
 	public E getDefault() {
 		return defaultValue;
 	}
 	
+	/**
+	 * Set default value for the argument
+	 * @param defaultValue The default value
+	 * @return this
+	 */
 	public Argument<E> setDefault(E defaultValue) {
 		//TODO: Check against constraints if there are some
 		this.defaultValue = defaultValue;
 		return this;
 	}
 	
+	/**
+	 * Check either this argument has a default value or not
+	 */
 	public boolean hasDefault() {
 		return defaultValue != null;
 	}
 	
+	/**
+	 * Set this argument as required or not
+	 * @param required <code>true</code> if required, else <code>false</code>
+	 * @return
+	 */
 	public Argument<E> required(boolean required) {
 		this.required = required;
 		return this;
 	}
 	
+	/**
+	 * Check if this argument is required or not. Set with {@link #required(boolean)}
+	 */
 	public boolean isRequired() {
 		return required;
 	}
 	
+	/**
+	 * Add an assertion predicate which will be checked after argument value has been parsed
+	 * @param predicate A predicate that checks the parsed value
+	 * @return this
+	 */
 	public Argument<E> andAssert(Predicate<E> predicate) {
 		if(validation == null)
 			validation = predicate;
@@ -151,14 +230,11 @@ public abstract class Argument<E> implements IHelpString {
 		return this;
 	}
 	
-	public Argument<E> orAssert(Predicate<E> predicate) {
-		if(validation == null)
-			validation = predicate;
-		else
-			validation = validation.or(predicate);
-		return this;
-	}
-	
+	/**
+	 * Add a consumer that will get the argument value after it has been parsed and checked
+	 * @param action The consumer
+	 * @return this
+	 */
 	public Argument<E> consume(Consumer<E> action) {
 		if(this.action == null)
 			this.action = action;
@@ -167,6 +243,11 @@ public abstract class Argument<E> implements IHelpString {
 		return this;
 	}
 	
+	/**
+	 * Add an action to run when the argument has been parsed
+	 * @param action The action to run
+	 * @return this
+	 */
 	public Argument<E> action(Runnable action) {
 		consume((x) -> action.run());
 		return this;
@@ -202,6 +283,13 @@ public abstract class Argument<E> implements IHelpString {
 		return help.toString();
 	}
 
+	/**
+	 * Check assertions, then call consumers and actions, passing the given value
+	 * in arguments
+	 * @param value The value to call functions on
+	 * @return The resulting value
+	 * @throws InvalidValueException If the value does not pass checks
+	 */
 	private E callDirect(E value) throws InvalidValueException {
 		if(value != null && validation != null && !validation.test(value))
 			throw new InvalidValueException(names[0], value.toString());
@@ -211,11 +299,22 @@ public abstract class Argument<E> implements IHelpString {
 		return value;
 	}
 	
-	public E call() throws ArgParseException {
-			return call(null);
+	/**
+	 * Process an empty value (for a flag argument)
+	 * @return The resulting value
+	 * @throws ArgParseException
+	 */
+	public E process() throws ArgParseException {
+			return process(null);
 	}
 	
-	public E call(String value) throws ArgParseException {
+	/**
+	 * Process a value : parse, check, and call functions
+	 * @param value The string value to parse
+	 * @return The parsed value
+	 * @throws ArgParseException In case of parsing failed
+	 */
+	public E process(String value) throws ArgParseException {
 		if(value == null && requireValue())
 			throw new ValueRequiredException(this);
 		if(choices != null && choices.size() > 0 && !choices.contains(value))
@@ -223,7 +322,11 @@ public abstract class Argument<E> implements IHelpString {
 		return callDirect(parse(value));
 	}
 	
-	public E callDefault() {
+	/**
+	 * Process with the default value
+	 * @return The resulting default value
+	 */
+	public E processDefault() {
 		try {
 			return callDirect(defaultValue);
 		} catch (InvalidValueException e) {
@@ -232,8 +335,22 @@ public abstract class Argument<E> implements IHelpString {
 		}
 	}
 	
+	/**
+	 * Parse the value
+	 * @param value The value to parse
+	 * @return The parsed value
+	 * @throws ArgParseException If parsing failed
+	 */
 	public abstract E parse(String value) throws ArgParseException;
+	
+	/**
+	 * Check if this argument requires a value, or is a flag
+	 */
 	public abstract boolean requireValue();
+	
+	/**
+	 * @return The value type description string, used in help messages
+	 */
 	public abstract String typeDesc();
 	
 }

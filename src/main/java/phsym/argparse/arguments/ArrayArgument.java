@@ -36,7 +36,7 @@ import phsym.argparse.exceptions.ArgParseException;
 
 public abstract class ArrayArgument<E> extends Argument<List<E>> {
 	
-	private char separator = ',';
+	protected char separator = ',';
 	
 	public ArrayArgument() {
 		super();
@@ -61,7 +61,7 @@ public abstract class ArrayArgument<E> extends Argument<List<E>> {
 	
 	@Override
 	public Argument<List<E>> choices(String... choices) {
-		throw new RuntimeException(getClass().getName() + " canoot have multiple choices");
+		throw new RuntimeException(getClass().getName() + " cannot have multiple choices");
 	}
 	
 	protected abstract E[] createArray(int len);
