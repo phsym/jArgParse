@@ -4,3 +4,5 @@
 /build/
 /junit/
 /target/
+/.project
+/.classpath
