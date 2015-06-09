@@ -31,6 +31,8 @@ package phsym.argparse;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -39,7 +41,17 @@ import java.util.Map;
 
 
 
+
+
+
+
+
 import org.junit.Test;
+
+
+
+
+
 
 
 
@@ -205,5 +217,43 @@ public class ArgParseTest implements Type {
 		Map<String, Object> res = parser.parseThrow(Arrays.asList("-i", "12"));
 		assertNotNull(res);
 		assertEquals(res.get("i"), 12);
+	}
+	
+	@Test
+	public void test_file() throws IOException, ArgParseException {
+		ArgParse parser = new ArgParse("Test");
+		parser.add(FILE, "-d")
+			.exists(true)
+			.directory(true)
+			.help("A Directory");
+		parser.add(FILE, "-f")
+			.create(false, true, true)
+			.help("A File");
+		
+		File tmpFile = File.createTempFile("tmp", "test");
+		tmpFile.delete();
+		File tmpDir = File.createTempFile("tmpdir", "test");
+		tmpDir.delete();
+		tmpDir.mkdirs();
+		
+		String[] args = new String[]{"-f", tmpFile.getAbsolutePath(), "-d", tmpDir.getAbsolutePath()};
+		Map<String, Object> res = parser.parseThrow(args);
+		assertEquals(res.get("f"), tmpFile);
+		assertEquals(res.get("d"), tmpDir);
+	}
+	
+	@Test
+	public void test_bool() {
+		ArgParse parser = new ArgParse("Test");
+		parser.add(BOOL, "-b")
+			.setDefault(false);
+		Map<String, Object> res = parser.parse(new String[]{"-b"});
+		assertTrue((Boolean)res.get("b"));
+		
+		parser = new ArgParse("Test");
+		parser.add(BOOL, "-b")
+			.setDefault(false);
+		res = parser.parse(new String[]{});
+		assertFalse((Boolean)res.get("b"));
 	}
 }

@@ -101,7 +101,7 @@ public class FileArgument extends Argument<File> {
 					throw new ArgParseException("Could not create dirs " + file.getAbsolutePath());
 			} else
 				try {
-					if(file.getParentFile()!= null && !file.getParentFile().mkdirs())
+					if(file.getParentFile()!= null && !file.getParentFile().exists() && !file.getParentFile().mkdirs())
 						throw new ArgParseException("Could not create parent dirs " + file.getAbsolutePath());
 					System.out.println("create new file");
 					file.createNewFile();
