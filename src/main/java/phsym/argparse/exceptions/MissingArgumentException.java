@@ -31,14 +31,28 @@ package phsym.argparse.exceptions;
 
 import phsym.argparse.arguments.Argument;
 
+/**
+ * Exception thrown when an argument is missing
+ * @author phsym
+ *
+ */
 public class MissingArgumentException extends ArgParseException {
 
 	private static final long serialVersionUID = -7819296322556485892L;
 
+	/**
+	 * Constructor
+	 * @param argument The missing argument
+	 */
 	public MissingArgumentException(Argument<?> argument) {
 		super("Argument " + argument.getNames()[0] + " is missing");
 	}
 
+	/**
+	 * Constructor
+	 * @param argument The missing argument
+	 * @param cause The throwable cause that caused this exception to be thrown
+	 */
 	public MissingArgumentException(Argument<?> argument, Throwable cause) {
 		super("Argument " + argument.getNames()[0] + " is missing", cause);
 	}

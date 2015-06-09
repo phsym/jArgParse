@@ -36,11 +36,39 @@ import phsym.argparse.arguments.impl.StringArgument;
 import phsym.argparse.arguments.impl.StringArrayArgument;
 import phsym.argparse.arguments.impl.StringMapArgument;
 
+/**
+ * Static final definitions of common argument types
+ * @author phsym
+ *
+ */
 public interface Type {
+	/**
+	 * Boolean argument
+	 */
 	public static final Class<BoolArgument> BOOL = BoolArgument.class;
+	
+	/**
+	 * Integer argument
+	 */
 	public static final Class<IntArgument> INT = IntArgument.class;
+	
+	/**
+	 * String argument
+	 */
 	public static final Class<StringArgument> STRING = StringArgument.class;
+	
+	/**
+	 * List of strings argument
+	 */
 	public static final Class<StringArrayArgument> STRING_ARRAY = StringArrayArgument.class;
+	
+	/**
+	 * Map of strings argument
+	 */
 	public static final Class<StringMapArgument> STRING_MAP = StringMapArgument.class;
+	
+	/**
+	 * File argument
+	 */
 	public static final Class<FileArgument> FILE = FileArgument.class;
 }

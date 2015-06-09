@@ -35,14 +35,27 @@ import phsym.argparse.arguments.Argument;
 import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.InvalidValueException;
 
+/**
+ * Represent a String argument
+ * @author phsym
+ *
+ */
 public class StringArgument extends Argument<String> {
 	
 	private Pattern pattern = null;
 	
+	/**
+	 * Default constructor
+	 */
 	public StringArgument() {
 		super();
 	}
 
+	/**
+	 * Add a pattern constraint on the value
+	 * @param regex The pattern constraint
+	 * @return this
+	 */
 	public StringArgument pattern(String regex) {
 		pattern = Pattern.compile(regex);
 		return this;

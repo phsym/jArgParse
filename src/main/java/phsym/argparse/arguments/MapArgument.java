@@ -35,14 +35,29 @@ import java.util.Map;
 
 import phsym.argparse.exceptions.ArgParseException;
 
+/**
+ * Represent an argument that should be parsed as a map of <String, E>
+ * @author phsym
+ *
+ * @param <E> The type of elements stored in the parsed map
+ */
 public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 	
 	protected char entrySeparator = ',';
 	protected char keySeparator = ':';
 	
+	/**
+	 * Default contructor
+	 */
 	public MapArgument() {
 	}
 	
+	/**
+	 * Set the separator character used in list to separate elements
+	 * @param keySeparator The separator used for separating keys and entries (default to ':')
+	 * @param entrySeparator The separator used to separate groups odfkey/entry (default to ',')
+	 * @return this
+	 */
 	public MapArgument<V> separators(char entrySeparator, char keySeparator) {
 		this.entrySeparator = entrySeparator;
 		this.keySeparator = keySeparator;
@@ -66,5 +81,10 @@ public abstract class MapArgument<V> extends Argument<Map<String, V>> {
 		throw new RuntimeException(getClass().getName() + " cannot have multiple choices");
 	}
 	
+	/**
+	 * Parse the value to store in the map
+	 * @param value The string representation of the value
+	 * @return The parsed value
+	 */
 	protected abstract V parseValue(String value);
 }

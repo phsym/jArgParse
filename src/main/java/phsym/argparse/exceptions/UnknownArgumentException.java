@@ -29,9 +29,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.exceptions;
 
+/**
+ * Exception thrown when an unexpected argument is parsed
+ * @author phsym
+ *
+ */
 public class UnknownArgumentException extends ArgParseException {
 	private static final long serialVersionUID = -8723495139166161294L;
 	
+	/**
+	 * Constructor
+	 * @param argument The unexpected argument name
+	 */
 	public UnknownArgumentException(String argument) {
 		super("Unknown argument : " + argument);
 	}

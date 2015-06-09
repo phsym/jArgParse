@@ -31,26 +31,61 @@ package phsym.argparse.exceptions;
 
 import java.util.List;
 
+/**
+ * An exception thrown when an invalid argument value is parsed
+ * @author pierresy
+ *
+ */
 public class InvalidValueException extends ArgParseException {
 
 	private static final long serialVersionUID = -2472708344900858077L;
 
+	/**
+	 * Constructor
+	 * @param argName Argument name
+	 * @param value Invalid value
+	 * @param e
+	 */
 	public InvalidValueException(String argName, String value, Throwable e) {
 		super("Invalid argument value for " + argName + " : " + value, e);
 	}
 	
+	/**
+	 * Constructor
+	 * @param argName argument name
+	 * @param value Invalid value
+	 * @param choices Possible values when applicable
+	 * @param e
+	 */
 	public InvalidValueException(String argName, String value, List<String> choices, Throwable e) {
 		super("Invalid argument value for " + argName + " : " + value + ". Possible choices are " + choices.toString(), e);
 	}
 	
+	/**
+	 * Constructor
+	 * @param argName Argument name
+	 * @param value Invalid value
+	 */
 	public InvalidValueException(String argName, String value) {
 		super("Invalid argument value for " + argName + " : " + value, null);
 	}
 	
+	/**
+	 * Constructor
+	 * @param argName argument name
+	 * @param value Invalid value
+	 * @param choices Possible values when applicable
+	 */
 	public InvalidValueException(String argName, String value, List<String> choices) {
 		super("Invalid argument value for " + argName + " : " + value + ". Possible choices are " + choices.toString(), null);
 	}
 	
+	/**
+	 * Constructor
+	 * @param argName argument name
+	 * @param value Invalid value
+	 * @param msg Additional message
+	 */
 	public InvalidValueException(String argName, String value, String msg) {
 		super("Invalid argument value for " + argName + " : " + value + " " + msg, null);
 	}

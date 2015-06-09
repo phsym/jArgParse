@@ -32,8 +32,16 @@ package phsym.argparse.arguments.impl;
 import phsym.argparse.arguments.Argument;
 import phsym.argparse.exceptions.ArgParseException;
 
+/**
+ * Represent a boolean argument
+ * @author phsym
+ *
+ */
 public class BoolArgument extends Argument<Boolean> {
 	
+	/**
+	 * Default constructor
+	 */
 	public BoolArgument() {
 		super();
 	}

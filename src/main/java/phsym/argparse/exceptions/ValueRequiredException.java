@@ -31,9 +31,18 @@ package phsym.argparse.exceptions;
 
 import phsym.argparse.arguments.Argument;
 
+/**
+ * Exception thrown when an argument with required value has been parsed without value
+ * @author phsym
+ *
+ */
 public class ValueRequiredException extends ArgParseException {
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Constructor
+	 * @param argument The missing a value
+	 */
 	public ValueRequiredException(Argument<?> argument) {
 		super("Argument " + argument.getNames()[0] + " require a value");
 	}

@@ -33,29 +33,55 @@ import phsym.argparse.arguments.Argument;
 import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.InvalidValueException;
 
+/**
+ * Represent an integer argument
+ * @author phsym
+ *
+ */
 public class IntArgument extends Argument<Integer> {
 	
 	private Integer lower = null;
 	private Integer upper = null;
 
+	/**
+	 * Default constructor
+	 */
 	public IntArgument() {
 		super();
 	}
 	
+	/**
+	 * Add a Greater Or Equal constraint
+	 * @param lowerBound The lower bound
+	 * @return this
+	 */
 	public IntArgument ge(int lowerBound) {
 		lower = lowerBound;
 		return this;
 	}
 	
+	/**
+	 * Add a Lower Than constraint
+	 * @param upperBound The upper bound
+	 * @return this
+	 */
 	public IntArgument lt(int upperBound) {
 		upper = upperBound;
 		return this;
 	}
 	
+	/**
+	 * Add a positivity constraint
+	 * @return this
+	 */
 	public IntArgument positive() {
 		return ge(0);
 	}
 	
+	/**
+	 * Add a negativity constraint
+	 * @return
+	 */
 	public IntArgument negative() {
 		return lt(0);
 	}
@@ -83,5 +109,4 @@ public class IntArgument extends Argument<Integer> {
 	public String typeDesc() {
 		return "int";
 	}
-
 }

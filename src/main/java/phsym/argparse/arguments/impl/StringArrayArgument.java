@@ -32,8 +32,16 @@ package phsym.argparse.arguments.impl;
 
 import phsym.argparse.arguments.ArrayArgument;
 
+/**
+ * Represent a list of strings argument
+ * @author phsym
+ *
+ */
 public class StringArrayArgument extends ArrayArgument<String> {
 	
+	/**
+	 * Default constructor
+	 */
 	public StringArrayArgument() {
 		super();
 	}

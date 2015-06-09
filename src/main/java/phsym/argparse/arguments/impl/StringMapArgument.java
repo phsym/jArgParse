@@ -31,8 +31,16 @@ package phsym.argparse.arguments.impl;
 
 import phsym.argparse.arguments.MapArgument;
 
+/**
+ * Represent a map of strings argument
+ * @author phsym
+ *
+ */
 public class StringMapArgument extends MapArgument<String> {
 	
+	/**
+	 * Default constructor
+	 */
 	public StringMapArgument() {
 		super();
 	}

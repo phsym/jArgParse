@@ -34,14 +34,28 @@ import java.util.List;
 
 import phsym.argparse.exceptions.ArgParseException;
 
+/**
+ * Represent an argument that should be parsed as an array of E
+ * @author phsym
+ *
+ * @param <E> The type of elements stored in the parsed array
+ */
 public abstract class ArrayArgument<E> extends Argument<List<E>> {
 	
 	protected char separator = ',';
 	
+	/**
+	 * Default contructor
+	 */
 	public ArrayArgument() {
 		super();
 	}
 	
+	/**
+	 * Set the separator character used in list to separate elements
+	 * @param separator The separator to use (default is set to ',')
+	 * @return this
+	 */
 	public ArrayArgument<E> separator(char separator) {
 		this.separator = separator;
 		return this;
@@ -64,6 +78,17 @@ public abstract class ArrayArgument<E> extends Argument<List<E>> {
 		throw new RuntimeException(getClass().getName() + " cannot have multiple choices");
 	}
 	
+	/**
+	 * Create an uninitialized array of elements
+	 * @param len The size of the array to create
+	 * @return The created array
+	 */
 	protected abstract E[] createArray(int len);
+	
+	/**
+	 * Parse individual aray elements
+	 * @param element The string to parse
+	 * @return The parsed element
+	 */
 	protected abstract E parseElement(String element);
 }

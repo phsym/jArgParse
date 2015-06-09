@@ -29,27 +29,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package phsym.argparse.exceptions;
 
+/**
+ * Exception thrown when some arguments definitions are conflicting
+ * @author phsym
+ *
+ */
 public class ArgumentConflictException extends RuntimeException {
 
 	private static final long serialVersionUID = -4920296464316982123L;
 
-	public ArgumentConflictException() {
-	}
-
+	/**
+	 * Constructor
+	 * @param message A message describing the reason that made this exception to be raised
+	 */
 	public ArgumentConflictException(String message) {
 		super(message);
 	}
-
-	public ArgumentConflictException(Throwable cause) {
-		super(cause);
-	}
-
-	public ArgumentConflictException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public ArgumentConflictException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
 }
