@@ -45,6 +45,7 @@ import phsym.argparse.arguments.IHelpString;
 import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.ArgumentConflictException;
+import phsym.argparse.exceptions.InvalidArgumentNameException;
 import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
 import phsym.argparse.exceptions.ValueRequiredException;
@@ -143,8 +144,9 @@ public class ArgParse {
 	 * @param name The name for this argument (eg: "-a")
 	 * @param otherNames Any additional names for the argument (eg: "--arg")
 	 * @return The added argument so it can be configured
+	 * @throws InvalidArgumentNameException If the name is not valid
 	 */
-	public <E, T extends Argument<E>> T add(Class<T> type, String name, String ... otherNames) {
+	public <E, T extends Argument<E>> T add(Class<T> type, String name, String ... otherNames) throws InvalidArgumentNameException {
 		try {
 			T arg = type.newInstance();
 			arg.names(name, otherNames);
@@ -202,7 +204,7 @@ public class ArgParse {
 	}
 	
 	/**
-	 * Add the default error handler which simplye prints the error message,
+	 * Add the default error handler which simply prints the error message,
 	 * then prints the help, then exists
 	 * @return this
 	 */

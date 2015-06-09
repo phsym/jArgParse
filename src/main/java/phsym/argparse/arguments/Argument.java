@@ -33,9 +33,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import phsym.argparse.ArgParse;
 import phsym.argparse.exceptions.ArgParseException;
+import phsym.argparse.exceptions.InvalidArgumentNameException;
 import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.ValueRequiredException;
 
@@ -46,6 +48,8 @@ import phsym.argparse.exceptions.ValueRequiredException;
  * @param <E> The type of the argument value resulting from parsing
  */
 public abstract class Argument<E> implements IHelpString {
+	
+	private static Pattern validArgName = Pattern.compile("--?[a-zA-z0-9]*");
 
 	private String[] names;
 	private String description;
@@ -111,16 +115,30 @@ public abstract class Argument<E> implements IHelpString {
 	}
 	
 	/**
+	 * Check if the argument name is valid
+	 * @param name The name to verify
+	 * @throws InvalidArgumentNameException if the argument name is invalid
+	 */
+	private void validateName(String name) throws InvalidArgumentNameException {
+		if(!validArgName.matcher(name).matches())
+			throw new InvalidArgumentNameException("Invalid argument name : " + name);
+	}
+	
+	/**
 	 * Set the names for this argument (don't forget dashes, eg : "-a" or "--args")
 	 * @param firstName The main and mandatory name
 	 * @param names Additional names
 	 * @return this
+	 * @throws InvalidArgumentNameException If the name is not valid
 	 */
-	public Argument<E> names(String firstName, String ... names) {
+	public Argument<E> names(String firstName, String ... names) throws InvalidArgumentNameException {
 		this.names = new String[names.length + 1];
+		validateName(firstName);
 		this.names[0] = firstName;
-		for(int i = 0; i < names.length; i++)
+		for(int i = 0; i < names.length; i++) {
+			validateName(names[i]);
 			this.names[i+1] = names[i];
+		}
 		return this;
 	}
 	

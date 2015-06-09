@@ -36,31 +36,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
-
-
-
-
-
-
-
-
-
-
 import org.junit.Test;
-
-
-
-
-
-
-
-
-
-
 
 import phsym.argparse.arguments.Type;
 import phsym.argparse.exceptions.ArgParseException;
 import phsym.argparse.exceptions.ArgumentConflictException;
+import phsym.argparse.exceptions.InvalidArgumentNameException;
 import phsym.argparse.exceptions.InvalidValueException;
 import phsym.argparse.exceptions.MissingArgumentException;
 import phsym.argparse.exceptions.UnknownArgumentException;
@@ -170,9 +151,24 @@ public class ArgParseTest implements Type {
 		try {
 			parser.add(INT, "-i");
 			fail("No ArgumentConflictException thrown");
-		} catch(ArgumentConflictException e) {
-			
-		}
+		} catch(ArgumentConflictException e) {}
+	}
+	
+	@Test
+	public void test_invalid_name() {
+		ArgParse parser = new ArgParse("Test");
+		try {
+			parser.add(INT, "argname");
+			fail("Exception not raised");
+		} catch(InvalidArgumentNameException e) {}
+		try {
+			parser.add(INT, "---argname");
+			fail("Exception not raised");
+		} catch(InvalidArgumentNameException e) {}
+		try {
+			parser.add(INT, "--argname&$");
+			fail("Exception not raised");
+		} catch(InvalidArgumentNameException e) {}
 	}
 	
 	@Test
