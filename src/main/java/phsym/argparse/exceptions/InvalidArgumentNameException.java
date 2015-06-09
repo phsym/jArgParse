@@ -13,9 +13,4 @@ public class InvalidArgumentNameException extends RuntimeException {
 	public InvalidArgumentNameException(String message) {
 		super(message);
 	}
-
-	public InvalidArgumentNameException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
 }

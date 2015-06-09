@@ -47,13 +47,4 @@ public class MissingArgumentException extends ArgParseException {
 	public MissingArgumentException(Argument<?> argument) {
 		super("Argument " + argument.getNames()[0] + " is missing");
 	}
-
-	/**
-	 * Constructor
-	 * @param argument The missing argument
-	 * @param cause The throwable cause that caused this exception to be thrown
-	 */
-	public MissingArgumentException(Argument<?> argument, Throwable cause) {
-		super("Argument " + argument.getNames()[0] + " is missing", cause);
-	}
 }
