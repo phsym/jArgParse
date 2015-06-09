@@ -213,6 +213,17 @@ public class ArgParseTest implements Type {
 		Map<String, Object> res = parser.parseThrow(Arrays.asList("-i", "12"));
 		assertNotNull(res);
 		assertEquals(res.get("i"), 12);
+		
+		parser = new ArgParse("Test");
+		parser.add(INT, "-i").negative();
+		parser.parseThrow(new String[]{"-i", "-1"});
+		
+		parser = new ArgParse("Test");
+		parser.add(INT, "-i").negative();
+		try {
+			parser.parseThrow(new String[]{"-i", "0"});
+			fail("InvalidValueException not raised");
+		} catch(InvalidValueException e){}
 	}
 	
 	@Test
@@ -251,5 +262,39 @@ public class ArgParseTest implements Type {
 			.setDefault(false);
 		res = parser.parse(new String[]{});
 		assertFalse((Boolean)res.get("b"));
+	}
+	
+	@Test
+	public void test_string_pattern() throws ArgParseException {
+		ArgParse parser = new ArgParse("Test");
+		parser.add(STRING, "-s").pattern("[0-9][A-Z]");
+		parser.parseThrow(new String[]{"-s", "5D"});
+		
+		parser = new ArgParse("Test");
+		parser.add(STRING, "-s").pattern("[0-9][A-Z]");
+		try {
+			parser.parseThrow(new String[]{"-s", "D5"});
+			fail("No Invalid value exception raised");
+		} catch(InvalidValueException e) {}
+	}
+	
+	@Test
+	public void test_map_arg_choices() {
+		ArgParse parser = new ArgParse("Test");
+		try {
+			parser.add(STRING_MAP, "-m")
+				.choices("A", "B", "C");
+			fail("RuntimeException not raised when trying to add choices to a MapArgument");
+		} catch(RuntimeException e){}
+	}
+	
+	@Test
+	public void test_array_arg_choices() {
+		ArgParse parser = new ArgParse("Test");
+		try {
+			parser.add(STRING_ARRAY, "-a")
+				.choices("A", "B", "C");
+			fail("RuntimeException not raised when trying to add choices to an ArrayArgument");
+		} catch(RuntimeException e){}
 	}
 }

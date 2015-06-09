@@ -49,7 +49,7 @@ import phsym.argparse.exceptions.ValueRequiredException;
  */
 public abstract class Argument<E> implements IHelpString {
 	
-	private static Pattern validArgName = Pattern.compile("--?[a-zA-z0-9]*");
+	private static Pattern validArgName = Pattern.compile("--?[a-zA-Z0-9]*");
 
 	private String[] names;
 	private String description;
