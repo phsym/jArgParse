@@ -15,6 +15,27 @@ It's currently a work in progress
 
 ## How To Use :
 
+First edit your pom.xml in teh following way :
+
+Add the jitpack repository :
+
+```xml
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+```
+
+Then add the dependency
+
+```xml
+<dependency>
+	<groupId>com.github.phsym</groupId>
+	<artifactId>jArgParse</artifactId>
+	<version>0.1.0</version>
+</dependency>
+```
+
 ```java
 public class Main implements Type {
 
