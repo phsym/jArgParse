@@ -155,8 +155,18 @@ public class ArgParseTest implements Type {
 	}
 	
 	@Test
-	public void test_invalid_name() {
+	public void test_name_validation() {
 		ArgParse parser = new ArgParse("Test");
+		try {
+			parser.add(INT, "-a");
+			parser.add(INT, "--arg");
+			parser.add(INT, "-A");
+			parser.add(INT, "--AAaaAa");
+			parser.add(INT, "--aa-aa");
+			parser.add(INT, "--aa-aa-AA-Aa-aA");
+		} catch(InvalidArgumentNameException e) {
+			fail("Name should be valid : " + e.getMessage());
+		}
 		try {
 			parser.add(INT, "argname");
 			fail("Exception not raised");
@@ -167,6 +177,14 @@ public class ArgParseTest implements Type {
 		} catch(InvalidArgumentNameException e) {}
 		try {
 			parser.add(INT, "--argname&$");
+			fail("Exception not raised");
+		} catch(InvalidArgumentNameException e) {}
+		try {
+			parser.add(INT, "-");
+			fail("Exception not raised");
+		} catch(InvalidArgumentNameException e) {}
+		try {
+			parser.add(INT, "--");
 			fail("Exception not raised");
 		} catch(InvalidArgumentNameException e) {}
 	}
