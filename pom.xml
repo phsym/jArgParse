@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.phsym</groupId>
 	<artifactId>jArgParse</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<name>jArgParse</name>
 	<description>Argument parser for java</description>
 	<build>

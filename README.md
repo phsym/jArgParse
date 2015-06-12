@@ -32,7 +32,7 @@ Then add the dependency
 <dependency>
 	<groupId>com.github.phsym</groupId>
 	<artifactId>jArgParse</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 </dependency>
 ```
 
