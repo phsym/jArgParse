@@ -36,6 +36,8 @@ Then add the dependency
 </dependency>
 ```
 
+Now you can start using the library
+
 ```java
 public class Main implements Type {
 
