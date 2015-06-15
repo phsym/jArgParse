@@ -15,7 +15,7 @@ It's currently a work in progress
 
 ## How To Use :
 
-First edit your pom.xml in teh following way :
+First edit your pom.xml in the following way :
 
 Add the jitpack repository :
 
